@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mySBSI - Federasi SBSI Kota Bitung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        .bg-mysbsi { background-color: #003366; }
+        .text-mysbsi { color: #003366; }
+        .page { display: none; }
+        .active { display: block; }
+        /* Animasi Splash */
+        #splash {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div id="splash">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Logo_SBSI.png/600px-Logo_SBSI.png" 
+             class="w-32 animate__animated animate__zoomIn" alt="Logo SBSI">
+        <h1 class="mt-4 text-2xl font-bold text-blue-900 animate__animated animate__fadeInUp">SBSI KOTA BITUNG</h1>
+        <div class="mt-8 w-12 h-12 border-4 border-blue-900 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+
+    <div id="page-login" class="page min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden">
+            <div class="p-8 text-center bg-mysbsi text-white">
+                <h2 class="text-3xl font-extrabold">mySBSI</h2>
+                <p class="text-sm opacity-80">Aplikasi Advokasi Buruh</p>
+            </div>
+            <div class="p-8">
+                <div class="mb-6 rounded-xl overflow-hidden shadow-inner border">
+                    <img src="https://via.placeholder.com/400x200?text=Iklan+SBSI+Kota+Bitung" class="w-full object-cover">
+                </div>
+                
+                <div class="space-y-4">
+                    <input type="text" id="login-nik" placeholder="Masukkan NIK" class="w-full p-4 border rounded-2xl focus:ring-2 focus:ring-blue-900 outline-none">
+                    <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 border rounded-2xl focus:ring-2 focus:ring-blue-900 outline-none">
+                    <button onclick="prosesLogin()" class="w-full bg-mysbsi text-white p-4 rounded-2xl font-bold hover:bg-blue-800 transition">LOGIN</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-dashboard" class="page min-h-screen">
+        <nav class="bg-mysbsi p-4 text-white flex justify-between items-center sticky top-0 z-10">
+            <span class="font-bold tracking-widest text-lg">mySBSI</span>
+            <button onclick="logout()" class="bg-red-500 px-4 py-1 rounded-lg text-sm font-bold">LOGOUT</button>
+        </nav>
+
+        <div class="p-5">
+            <div class="bg-white p-5 rounded-3xl shadow-sm flex items-center mb-6 border-l-8 border-blue-900">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-2xl mr-4 overflow-hidden">
+                    <img id="user-foto" src="" alt="👤">
+                </div>
+                <div>
+                    <h3 id="user-nama" class="font-bold text-xl text-blue-900 leading-tight">-</h3>
+                    <p id="user-perusahaan" class="text-sm text-gray-500">-</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div onclick="bukaWizard()" class="bg-white p-6 rounded-3xl shadow-sm text-center cursor-pointer border hover:border-blue-900 transition">
+                    <div class="text-4xl mb-2">🧮</div>
+                    <div class="font-bold text-sm text-blue-900">Hitung Hak PHK</div>
+                </div>
+                <div class="bg-white p-6 rounded-3xl shadow-sm text-center cursor-pointer border hover:border-blue-900 transition">
+                    <div class="text-4xl mb-2">📺</div>
+                    <div class="font-bold text-sm text-blue-900">Video Edukasi</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-wizard" class="page min-h-screen bg-white p-6">
+        <div class="flex justify-between items-center mb-8">
+            <button onclick="navigasi('page-dashboard')" class="text-blue-900 font-bold">← Kembali</button>
+            <h2 class="text-xl font-black italic text-blue-900">KALKULATOR PHK</h2>
+        </div>
+
+        <div id="wizard-step-1">
+            <p class="mb-4 font-bold">Tahun Berapa Anda ingin isi?</p>
+            <select id="wiz-tahun" class="w-full p-4 border rounded-2xl mb-4">
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+            </select>
+            <p class="mb-2 font-bold text-sm text-gray-500">Upah Per Bulan di Tahun Tersebut:</p>
+            <input type="number" id="wiz-upah" placeholder="Contoh: 3500000" class="w-full p-4 border rounded-2xl mb-6">
+            
+            <div class="bg-blue-50 p-4 rounded-2xl mb-6 border border-blue-200">
+                <p class="text-xs text-blue-800">Satu klik untuk mengisi 12 bulan (Januari - Desember) secara otomatis sesuai tahun yang dipilih.</p>
+            </div>
+
+            <button onclick="simpanStep1()" class="w-full bg-mysbsi text-white p-5 rounded-2xl font-bold shadow-lg">TERAPKAN KE 12 BULAN</button>
+        </div>
+    </div>
+
+    <script>
+        // MASUKKAN URL WEB APP GAS ANDA DISINI
+        const URL_GAS = "https://script.google.com/macros/s/AKfycbxU-g7IDrAPR9QZITte4Vgp485MveuJZMbOebSaM0lz_tz93E5g9S9N8hHFZBWzohSC/exec";
+
+        let currentUser = null;
+
+        // 1. Timer Splash Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash');
+                splash.classList.add('animate__animated', 'animate__fadeOut');
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    navigasi('page-login');
+                }, 500);
+            }, 3000);
+        });
+
+        function navigasi(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function prosesLogin() {
+            const nik = document.getElementById('login-nik').value;
+            const pass = document.getElementById('login-pass').value;
+            
+            if(!nik || !pass) return alert("Isi NIK dan Password!");
+
+            // Simulasi Login (Hubungkan dengan GAS nantinya menggunakan google.script.run)
+            alert("Sedang Menghubungkan ke Server SBSI...");
+            // Logika loginLevel3 akan dijalankan di sini
+            
+            // Dummy Data untuk Testing Tampilan
+            currentUser = { nama: "Anggota SBSI", perusahaan: "PT. Multi Rempah Sulawesi", level: 3 };
+            document.getElementById('user-nama').innerText = currentUser.nama;
+            document.getElementById('user-perusahaan').innerText = currentUser.perusahaan;
+            navigasi('page-dashboard');
+        }
+
+        function logout() {
+            if(confirm("Keluar dari mySBSI?")) {
+                location.reload(); 
+            }
+        }
+
+        function bukaWizard() {
+            navigasi('page-wizard');
+        }
+
+        function simpanStep1() {
+            const thn = document.getElementById('wiz-tahun').value;
+            const upah = document.getElementById('wiz-upah').value;
+            alert(`Data Tahun ${thn} dengan Upah Rp ${upah} berhasil diterapkan ke 12 bulan.`);
+            // Disini panggil fungsi simpanKalkulasi ke GAS
+        }
+    </script>
+</body>
+</html>
