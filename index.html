@@ -3,23 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>mySBSI - Kalkulator Hak Buruh</title>
+    <title>mySBSI - Perjuangan Buruh</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&display=swap');
         body { font-family: 'Public Sans', sans-serif; background: #002D57; margin: 0; }
         .page { display: none; min-height: 100vh; flex-direction: column; background: #F3F4F6; }
         .active { display: flex !important; }
-        .input-card { background: white; padding: 15px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
-        .input-card span { font-size: 10px; font-weight: 900; color: #6B7280; text-transform: uppercase; }
-        .input-card input { text-align: right; font-weight: 900; color: #002D57; border: none; outline: none; width: 45%; font-size: 15px; }
-        .btn-next { background: #3D2B2A; color: white; padding: 20px; border-radius: 12px; width: 100%; font-weight: 900; text-transform: uppercase; }
+        .logo-clean { width: 240px; height: 75px; object-fit: cover; object-position: top; }
+        .card-input { background: white; padding: 15px 20px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+        .card-input span { font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; }
+        .card-input input { text-align: right; font-weight: 900; color: #002D57; border: none; outline: none; width: 45%; }
+        .btn-action { background: #3D2B2A; color: white; padding: 18px; border-radius: 12px; width: 100%; font-weight: 900; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <div id="page-login" class="page active !bg-[#002D57] items-center justify-center p-10">
-        <img src="Logo My SBSI.png" class="w-60 mb-10 object-contain">
+    <div id="splash" class="fixed inset-0 bg-white z-[99] flex flex-col items-center justify-center">
+        <img src="Logo_SBSI.png" class="w-24 mb-4">
+        <p class="text-[10px] font-black text-gray-400 tracking-widest uppercase">Federasi SBSI Bitung</p>
+    </div>
+
+    <div id="page-login" class="page active !bg-[#002D57] items-center justify-center p-8">
+        <img src="Logo My SBSI.png" class="logo-clean mb-12">
         <div class="w-full max-w-sm space-y-3">
             <input type="text" id="nik" placeholder="NIK Anggota" class="w-full p-4 rounded-xl font-bold outline-none">
             <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl font-bold outline-none">
@@ -28,128 +34,108 @@
     </div>
 
     <div id="page-dates" class="page">
-        <div class="bg-[#002D57] p-5 text-white flex items-center gap-3 shadow-lg">
+        <div class="bg-[#002D57] p-5 text-white flex items-center gap-3">
             <button onclick="location.reload()">←</button>
-            <h2 class="font-black italic text-sm">SET MASA KERJA</h2>
+            <h2 class="font-black italic text-sm">MASA KERJA</h2>
         </div>
         <div class="p-6 space-y-4 flex-1">
             <div class="bg-white p-6 rounded-3xl shadow-sm">
-                <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Tanggal Masuk</label>
-                <input type="date" id="tgl-masuk" class="w-full p-3 bg-gray-50 rounded-xl font-bold outline-none">
+                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">Tanggal Masuk</label>
+                <input type="date" id="tgl-masuk" class="w-full font-bold outline-none text-lg">
             </div>
             <div class="bg-white p-6 rounded-3xl shadow-sm">
-                <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Tanggal PHK</label>
-                <input type="date" id="tgl-phk" class="w-full p-3 bg-gray-50 rounded-xl font-bold outline-none">
+                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">Tanggal PHK</label>
+                <input type="date" id="tgl-phk" class="w-full font-bold outline-none text-lg">
             </div>
         </div>
-        <div class="p-6"><button onclick="buildWizard()" class="btn-next">Lanjut Input Upah</button></div>
+        <div class="p-6"><button onclick="generateGaji()" class="btn-action">Lanjut Input Upah</button></div>
     </div>
 
     <div id="page-gaji" class="page">
-        <div class="bg-[#002D57] p-5 text-white sticky top-0 z-10 flex justify-between items-center">
-            <h2 class="font-black italic text-sm uppercase">Upah Harian (Bulan Aktif)</h2>
-            <span class="text-[10px] font-bold opacity-50">SISTEM X 25 HARI</span>
+        <div class="bg-[#002D57] p-5 text-white flex justify-between items-center">
+            <h2 class="font-black italic text-sm">UPAH HARIAN</h2>
+            <span class="text-[10px] font-bold opacity-60">X 25 HARI/BULAN</span>
         </div>
-        <div id="list-gaji" class="flex-1 overflow-y-auto bg-white"></div>
+        <div id="list-gaji" class="flex-1 overflow-y-auto"></div>
         <div class="p-4 bg-white border-t sticky bottom-0">
-            <div onclick="duplikatGaji()" class="text-center text-blue-500 font-black text-[10px] uppercase mb-4 cursor-pointer tracking-widest">Duplikat Nilai Terakhir</div>
-            <button onclick="navigasi('page-tambahan')" class="btn-next">Lanjut THR & Kompensasi</button>
+            <div onclick="duplikat()" class="text-center text-blue-500 font-black text-[10px] uppercase mb-4 cursor-pointer">Duplikat Terakhir</div>
+            <button onclick="navigasi('page-tambahan')" class="btn-action">Lanjut THR & Kompensasi</button>
         </div>
     </div>
 
     <div id="page-tambahan" class="page">
-        <div class="bg-[#002D57] p-5 text-white"><h2 class="font-black italic text-sm uppercase">THR & Kompensasi Per Tahun</h2></div>
+        <div class="bg-[#002D57] p-5 text-white font-black italic text-sm uppercase">THR & Kompensasi / Tahun</div>
         <div id="list-tambahan" class="flex-1 overflow-y-auto"></div>
-        <div class="p-6"><button onclick="hitungFinal()" class="btn-next">Hasil Akhir & Patokan UMP</button></div>
+        <div class="p-6"><button onclick="hitungFinal()" class="btn-action">Hitung Hasil Akhir</button></div>
     </div>
 
-    <div id="page-final" class="page items-center justify-center p-8">
+    <div id="page-ump" class="page items-center justify-center p-8">
         <div class="bg-white p-10 rounded-[40px] shadow-2xl w-full text-center border-t-8 border-orange-500">
             <h3 class="font-black text-[#002D57] text-sm uppercase mb-1">UMP TERAKHIR (PATOKAN)</h3>
-            <p id="label-thn-ump" class="text-[10px] text-gray-400 font-bold mb-6">TAHUN -</p>
-            <div id="val-ump" class="text-4xl font-black text-[#002D57] mb-8">Rp 0</div>
-            
-            <div class="p-4 bg-orange-50 rounded-2xl mb-8">
-                <p class="text-[9px] font-black text-orange-600 uppercase mb-1">Estimasi Pesangon + UMPK</p>
-                <p id="total-hak" class="text-2xl font-black text-orange-700">Rp 0</p>
-            </div>
-            
-            <button class="w-full py-5 bg-[#10B981] text-white rounded-2xl font-black uppercase shadow-lg">Cetak Rekapitulasi</button>
-            <p onclick="navigasi('page-dates')" class="mt-6 text-[10px] font-black text-gray-400 uppercase cursor-pointer">Edit Masa Kerja</p>
+            <p id="ump-thn" class="text-[10px] text-gray-400 font-bold mb-6">TAHUN -</p>
+            <div id="ump-val" class="text-4xl font-black text-[#002D57] mb-10">Rp 0</div>
+            <button onclick="alert('Cetak PDF Rekapitulasi...')" class="w-full py-5 bg-[#10B981] text-white rounded-2xl font-black uppercase">Cetak Hasil Rekap</button>
+            <p onclick="navigasi('page-dates')" class="mt-6 text-[10px] font-black text-gray-400 uppercase cursor-pointer">Ulangi Input</p>
         </div>
     </div>
 
     <script>
-        const URL_GAS = "https://script.google.com/macros/s/AKfycbwZtwj9JFD-jEbqEucC9293Us5ftZh85khLp8xegvRCGM_fsoLjmyRdcYuqFs_KJHg/exec";
+        const URL_GAS = "https://script.google.com/macros/s/AKfycbxZ9gdhYqVXDhg7dPjG2OmiMAqiPm886q2IjlDR0r23RaNMIec9xrpKRAMfRZziTQa0/exec";
         let dbUmp = {};
+
+        window.onload = () => { setTimeout(() => document.getElementById('splash').style.display='none', 2000); };
 
         async function doLogin() {
             const btn = document.getElementById('btn-login');
-            btn.innerText = "MENGECEK...";
+            btn.innerText = "PROSES...";
             try {
                 const res = await fetch(`${URL_GAS}?action=login&nik=${document.getElementById('nik').value}&pass=${document.getElementById('pass').value}`).then(r => r.json());
                 if(res.status === "success") {
-                    const umpRes = await fetch(`${URL_GAS}?action=getUMP`).then(r => r.json());
-                    dbUmp = umpRes.data;
+                    const u = await fetch(`${URL_GAS}?action=getUMP`).then(r => r.json());
+                    dbUmp = u.data;
                     navigasi('page-dates');
                 } else alert(res.message);
-            } catch(e) { alert("Server Error! Cek URL GAS."); }
+            } catch(e) { alert("Error Server!"); }
             btn.innerText = "MASUK";
         }
 
-        function buildWizard() {
+        function generateGaji() {
             const start = new Date(document.getElementById('tgl-masuk').value);
             const end = new Date(document.getElementById('tgl-phk').value);
-            if(isNaN(start) || isNaN(end)) return alert("Isi tanggal dengan benar!");
+            if(isNaN(start) || isNaN(end)) return alert("Set Tanggal!");
 
-            let htmlGaji = "", htmlTambahan = "";
+            let hGaji = "", hTambahan = "", years = new Set();
             let curr = new Date(start.getFullYear(), start.getMonth(), 1);
-            let years = new Set();
 
-            while (curr <= end) {
+            while(curr <= end) {
                 const label = curr.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
-                // Logika Prorata: Jika bulan pertama masuk, hitung hari kerja (max 25)
                 let pengali = 25;
+                // Logika Prorata Bulan Pertama
                 if(curr.getMonth() === start.getMonth() && curr.getFullYear() === start.getFullYear()) {
-                    let lastDay = new Date(start.getFullYear(), start.getMonth() + 1, 0).getDate();
-                    pengali = Math.min(25, lastDay - start.getDate() + 1);
+                    let sisaHari = new Date(start.getFullYear(), start.getMonth() + 1, 0).getDate() - start.getDate() + 1;
+                    pengali = Math.min(25, sisaHari);
                 }
-
-                htmlGaji += `
-                <div class="input-card">
-                    <div>
-                        <span>${label}</span><br>
-                        <small class="text-[8px] font-bold text-orange-500 uppercase">${pengali} HARI KERJA</small>
-                    </div>
-                    <input type="text" placeholder="Upah/Hari" oninput="fmt(this)" class="inp-hari" data-days="${pengali}">
-                </div>`;
+                hGaji += `<div class="card-input"><div><span>${label}</span><br><small class="text-[8px] font-bold text-orange-500">${pengali} HARI KERJA</small></div><input type="text" placeholder="Rp 0" oninput="fmt(this)" class="inp-g"></div>`;
                 years.add(curr.getFullYear());
                 curr.setMonth(curr.getMonth() + 1);
             }
 
             years.forEach(y => {
-                htmlTambahan += `
-                <div class="p-4 bg-gray-200 text-[10px] font-black text-blue-900 uppercase italic">Tahun ${y}</div>
-                <div class="input-card"><span>THR DITERIMA</span><input type="text" placeholder="Rp 0" oninput="fmt(this)" class="inp-thr"></div>
-                <div class="input-card"><span>KOMPENSASI</span><input type="text" placeholder="Rp 0" oninput="fmt(this)" class="inp-komp"></div>`;
+                hTambahan += `<div class="p-4 bg-gray-200 text-[10px] font-black text-blue-900 uppercase">Tahun ${y}</div><div class="card-input"><span>THR</span><input type="text" placeholder="Rp 0" oninput="fmt(this)"></div><div class="card-input"><span>KOMPENSASI</span><input type="text" placeholder="Rp 0" oninput="fmt(this)"></div>`;
             });
 
-            document.getElementById('list-gaji').innerHTML = htmlGaji;
-            document.getElementById('list-tambahan').innerHTML = htmlTambahan;
+            document.getElementById('list-gaji').innerHTML = hGaji;
+            document.getElementById('list-tambahan').innerHTML = hTambahan;
             navigasi('page-gaji');
         }
 
         function hitungFinal() {
-            const tglPhk = new Date(document.getElementById('tgl-phk').value);
-            const thn = tglPhk.getFullYear();
-            const ump = dbUmp[thn] || 0;
-
-            // Kalkulasi Sederhana Pesangon (Contoh Logika PP 35)
-            // Di sini nanti Bapak bisa masukkan rumus perkalian masa kerja x UMP
-            document.getElementById('label-thn-ump').innerText = `TAHUN ${thn}`;
-            document.getElementById('val-ump').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(ump);
-            document.getElementById('total-hak').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(ump * 2); // Contoh 2x UMP
-            navigasi('page-final');
+            const tgl = new Date(document.getElementById('tgl-phk').value);
+            const thn = tgl.getFullYear();
+            const val = dbUmp[thn] || 0;
+            document.getElementById('ump-thn').innerText = `TAHUN ${thn}`;
+            document.getElementById('ump-val').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(val);
+            navigasi('page-ump');
         }
 
         function fmt(el) {
@@ -157,8 +143,8 @@
             el.value = v ? "Rp " + new Intl.NumberFormat('id-ID').format(v) : "";
         }
 
-        function duplikatGaji() {
-            const inps = document.querySelectorAll('.inp-hari');
+        function duplikat() {
+            const inps = document.querySelectorAll('.inp-g');
             let last = "";
             inps.forEach(i => { if(i.value) last = i.value; });
             if(last) inps.forEach(i => { if(!i.value) i.value = last; });
