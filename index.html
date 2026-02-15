@@ -7,198 +7,307 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #002D57; overflow: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&display=swap');
+        body { font-family: 'Public Sans', sans-serif; background: #002D57; overflow: hidden; margin: 0; }
         .page { display: none; position: absolute; inset: 0; background: #F3F4F6; flex-direction: column; }
-        .active { display: flex !important; animation: fadeIn 0.3s ease; }
+        .active { display: flex !important; animation: fadeIn 0.4s ease; }
         .bca-blue { background: #002D57; }
-        .bca-card { background: white; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .scroll-v { flex: 1; overflow-y: auto; padding: 20px; }
-        .btn-bca { background: #00569E; color: white; padding: 15px; border-radius: 12px; font-weight: 700; text-align: center; width: 100%; }
-        .btn-bca:active { transform: scale(0.98); background: #004077; }
-        .input-bca { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #D1D5DB; outline: none; margin-bottom: 12px; font-weight: 600; }
-        @media print { .no-print { display: none !important; } .page { display: block; position: static; background: white; } }
+        .btn-primary { background: #00AEEF; color: white; padding: 16px; border-radius: 12px; font-weight: 800; width: 100%; transition: 0.2s; }
+        .btn-primary:active { transform: scale(0.96); opacity: 0.9; }
+        #splash { position: fixed; inset: 0; background: #FFF; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .input-group { background: white; border-radius: 15px; padding: 5px 15px; border: 1px solid #E5E7EB; margin-bottom: 12px; }
+        .input-group input { width: 100%; border: none; padding: 12px 0; outline: none; font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <div id="page-login" class="page active !bg-[#002D57] items-center justify-center p-8">
-        <div class="w-full max-w-sm text-center">
-            <img src="Logo_SBSI.png" class="w-56 mx-auto mb-8 drop-shadow-2xl animate__animated animate__zoomIn" onerror="this.src='https://via.placeholder.com/200?text=mySBSI+Bitung'">
-            <div class="bg-white/10 p-6 rounded-3xl border border-white/20 backdrop-blur-sm mb-8">
-                <p class="text-white text-[10px] font-bold tracking-[4px] uppercase opacity-60 mb-4 italic italic">Iklan: Solidaritas Tanpa Batas!</p>
-                <input type="text" id="log-nik" placeholder="NIK / No. Anggota" class="input-bca">
-                <input type="password" id="log-pass" placeholder="Password" class="input-bca">
-                <button onclick="doLogin()" id="btn-login" class="btn-bca !bg-sky-500 shadow-xl shadow-sky-900/40">MASUK</button>
-            </div>
+    <div id="splash">
+        <img src="Logo_SBSI.png" class="w-32 animate__animated animate__pulse animate__infinite">
+        <div class="absolute bottom-10 text-gray-400 font-bold tracking-widest text-xs uppercase">Federasi SBSI Bitung</div>
+    </div>
+
+    <div id="page-login" class="page active !bg-[#002D57] items-center justify-between p-10 text-center">
+        <div class="mt-10 w-full">
+            <img src="Logo My SBSI.png" class="w-72 mx-auto drop-shadow-2xl animate__animated animate__fadeInDown">
         </div>
+
+        <div class="w-full max-w-sm space-y-4">
+            <div class="bg-white/5 p-4 rounded-2xl backdrop-blur-md border border-white/10 mb-6 text-left">
+                <p class="text-blue-300 text-[10px] font-black uppercase tracking-widest">Iklan SBSI :</p>
+                <p class="text-white text-xs leading-relaxed italic">"Keadilan bagi buruh adalah napas perjuangan kami. Bergabunglah!"</p>
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="nik" placeholder="NIK Anggota">
+            </div>
+            <div class="input-group">
+                <input type="password" id="pass" placeholder="Password">
+            </div>
+            <button onclick="prosesLogin()" id="btn-login" class="btn-primary">MASUK</button>
+        </div>
+        <div class="mb-4"></div>
     </div>
 
     <div id="page-dash" class="page">
-        <div class="bca-blue p-6 pb-12 rounded-b-[40px] text-white flex justify-between items-start shadow-xl">
-            <div>
-                <p class="text-[10px] opacity-60 font-bold uppercase tracking-widest">Dashboard Anggota</p>
-                <h2 id="u-nama" class="text-xl font-black">Memuat...</h2>
-                <p id="u-pt" class="text-[10px] opacity-80">-</p>
+        <div class="bca-blue p-8 pb-14 rounded-b-[50px] text-white shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <img id="u-foto" src="" class="w-16 h-16 rounded-2xl border-2 border-white object-cover shadow-lg">
+                <button onclick="logout()" class="bg-red-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Keluar</button>
             </div>
-            <img id="u-foto" class="w-14 h-14 rounded-2xl border-2 border-white object-cover shadow-lg">
+            <p class="text-xs opacity-70 uppercase tracking-tighter">Selamat Datang,</p>
+            <h2 id="u-nama" class="text-2xl font-black">Memuat...</h2>
+            <p id="u-perusahaan" class="text-[10px] mt-1 font-bold bg-white/20 inline-block px-3 py-1 rounded-full uppercase">-</p>
         </div>
-        <div class="px-6 -mt-8 scroll-v space-y-4">
-            <div onclick="startWizard()" class="bca-card p-6 flex items-center gap-4 cursor-pointer active:bg-gray-50 border-b-4 border-sky-500">
-                <div class="text-3xl">⚖️</div>
-                <div>
-                    <h4 class="font-bold text-blue-900">Hitung Hak PHK</h4>
-                    <p class="text-[10px] text-gray-400">PP 35 Thn 2021</p>
-                </div>
-            </div>
-            <button onclick="doLogout()" class="w-full p-4 text-xs font-bold text-red-500 bg-red-50 rounded-xl mt-10">LOGOUT</button>
-        </div>
-    </div>
 
-    <div id="page-wiz" class="page">
-        <div class="p-4 bca-blue text-white flex justify-between items-center shadow-md">
-            <button onclick="navigasi('page-dash')" class="font-bold">KEMBALI</button>
-            <h3 id="wiz-label" class="text-xs font-black uppercase">INPUT DATA</h3>
-            <button onclick="doLogout()" class="text-xs text-red-300 font-bold">LOGOUT</button>
-        </div>
-        <div class="scroll-v" id="wiz-container"></div>
-        <div class="p-6 bg-white border-t space-y-3">
-            <button onclick="duplikat()" class="w-full text-[10px] font-bold text-blue-900 py-2 bg-blue-50 rounded-lg">DUPLIKAT KE SISA BULAN</button>
-            <div class="grid grid-cols-2 gap-2">
-                <div class="bg-gray-100 p-2 rounded-xl text-center">
-                    <label class="text-[8px] font-bold text-gray-400 uppercase">THR</label>
-                    <input type="text" id="wiz-thr" oninput="fmtCur(this)" placeholder="Rp 0" class="w-full text-center font-bold bg-transparent outline-none">
-                </div>
-                <div class="bg-gray-100 p-2 rounded-xl text-center">
-                    <label class="text-[8px] font-bold text-gray-400 uppercase">KOMPENSASI</label>
-                    <input type="text" id="wiz-komp" oninput="fmtCur(this)" placeholder="Rp 0" class="w-full text-center font-bold bg-transparent outline-none">
+        <div class="px-6 -mt-8 scroll-v">
+            <div onclick="bukaKalkulator()" class="bg-white p-6 rounded-3xl shadow-xl flex items-center gap-5 border-b-4 border-orange-500 active:scale-95 transition cursor-pointer">
+                <div class="text-4xl">⚖️</div>
+                <div>
+                    <h4 class="font-black text-blue-900">Hitung Hak PHK</h4>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase">Sesuai PP 35 Tahun 2021</p>
                 </div>
             </div>
-            <button onclick="nextWiz()" id="btn-wiz" class="btn-bca">LANJUT</button>
         </div>
     </div>
 
     <div id="page-hasil" class="page">
         <div class="p-4 bca-blue text-white flex justify-between items-center no-print">
-            <button onclick="navigasi('page-dash')" class="font-bold text-xs uppercase">Dashboard</button>
-            <button onclick="window.print()" class="bg-white text-blue-900 px-4 py-2 rounded-xl font-black text-[10px]">CETAK</button>
-            <button onclick="doLogout()" class="font-bold text-xs text-red-300">LOGOUT</button>
+            <button onclick="navigasi('page-dash')" class="font-black text-xs">HOME</button>
+            <h2 class="font-black italic">REKAP HAK ANDA</h2>
+            <button onclick="window.print()" class="bg-white text-blue-900 px-4 py-1 rounded-lg font-black text-xs">PRINT</button>
         </div>
-        <div class="scroll-v" id="printable">
-            <div class="hidden print:block text-center border-b-2 border-blue-900 pb-4 mb-6">
+        <div class="scroll-v" id="print-area">
+            <div class="text-center border-b-4 border-double border-blue-900 pb-4 mb-6">
                 <h1 class="text-2xl font-black">FEDERASI SBSI BITUNG</h1>
-                <p class="text-xs">Laporan Hasil Perhitungan Hak PHK Pekerja</p>
+                <p class="text-[10px] font-bold">DOKUMEN REKAPITULASI HAK PESANGON</p>
             </div>
-            <div class="bca-card p-8 bg-gradient-to-br from-blue-900 to-blue-700 text-white text-center shadow-2xl mb-6">
-                <p class="text-[10px] font-bold uppercase opacity-60 tracking-widest">Total Hak Estimasi</p>
-                <h2 id="res-total" class="text-4xl font-black text-yellow-400 mt-2">Rp 0</h2>
+            <div class="bg-blue-900 p-8 rounded-3xl text-white text-center shadow-xl mb-6">
+                <p class="text-[10px] font-bold opacity-60 uppercase mb-2">Total Estimasi Terima</p>
+                <h2 id="res-total" class="text-4xl font-black text-orange-400">Rp 0</h2>
             </div>
-            <div class="space-y-4" id="res-detail"></div>
+            <div id="res-detail" class="space-y-4"></div>
         </div>
     </div>
 
     <script>
-        // Update URL GAS Bapak yang baru di sini!
-        const URL_GAS = "https://script.google.com/macros/s/AKfycbxD87cdTtY7roRoFJbbNBI7zsM32Tb_e4Q3mu_9ydRyRG6s8H88Rn2THGbrGDHO-X8b/exec"; 
+        // GANTI DENGAN URL GAS BAPAK
+        const URL_GAS = "https://script.google.com/macros/s/AKfycbyCqXO_WKRP0hp_l1Cyl0XvqgOZaUzHdUNFMFH9zHts2Fyh0ahjocShVIDUegp8A9MC/exec"; 
         
-        let user = null;
+        let userData = null;
         let dbUMP = {};
-        let years = [2024, 2025]; // Contoh masa kerja
-        let curIdx = 0;
-        let storage = { gaji: {}, tunjangan: {} };
+
+        window.onload = () => {
+            setTimeout(() => { document.getElementById('splash').style.display='none'; }, 2500);
+        };
+
+        async function prosesLogin() {
+            const n = document.getElementById('nik').value;
+            const p = document.getElementById('pass').value;
+            if(!n || !p) return alert("Lengkapi data!");
+
+            const btn = document.getElementById('btn-login');
+            btn.innerText = "MENGECEK..."; btn.disabled = true;
+
+            try {
+                const response = await fetch(`${URL_GAS}?action=login&nik=${n}&pass=${p}`);
+                const data = await response.json();
+                
+                if(data.status === "success") {
+                    userData = data.user;
+                    document.getElementById('u-nama').innerText = userData.nama;
+                    document.getElementById('u-perusahaan').innerText = userData.perusahaan;
+                    document.getElementById('u-foto').src = userData.foto || "https://via.placeholder.com/150";
+                    
+                    // Ambil Database UMP
+                    const resUmp = await fetch(`${URL_GAS}?action=getUMP`);
+                    const dUmp = await resUmp.json();
+                    dbUMP = dUmp.data;
+                    
+                    navigasi('page-dash');
+                } else { alert(data.message); }
+            } catch(e) { alert("Gagal terhubung ke database!"); }
+            btn.innerText = "MASUK"; btn.disabled = false;
+        }
 
         function navigasi(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
-        function fmtCur(el) {
-            let v = el.value.replace(/[^0-9]/g, '');
-            el.value = v ? "Rp " + new Intl.NumberFormat('id-ID').format(v) : "";
+        function logout() { location.reload(); }
+
+        function bukaKalkulator() {
+            // Logika simulasi langsung ke hasil karena data UMP sudah ditarik otomatis
+            const tahunPhk = "2025"; // Misal
+            const ump = dbUMP[tahunPhk] || 0;
+            
+            if(ump == 0) return alert("Data UMP Tahun " + tahunPhk + " belum ada di Spreadsheet!");
+            
+            const pesangon = ump * 9; // Contoh rumus sederhana
+            document.getElementById('res-total').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(pesangon);
+            document.getElementById('res-detail').innerHTML = `
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-8 border-blue-900 flex justify-between">
+                    <span class="text-xs font-bold text-gray-500">Patokan UMP ${tahunPhk}</span>
+                    <span class="font-black text-blue-900">Rp ${new Intl.NumberFormat('id-ID').format(ump)}</span>
+                </div>
+            `;
+            navigasi('page-hasil');
         }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>mySBSI - Federasi Bitung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&display=swap');
+        body { font-family: 'Public Sans', sans-serif; background: #002D57; overflow: hidden; margin: 0; }
+        .page { display: none; position: absolute; inset: 0; background: #F3F4F6; flex-direction: column; }
+        .active { display: flex !important; animation: fadeIn 0.4s ease; }
+        .bca-blue { background: #002D57; }
+        .scroll-v { flex: 1; overflow-y: auto; padding: 20px; }
+        .btn-primary { background: #00AEEF; color: white; padding: 16px; border-radius: 12px; font-weight: 800; width: 100%; transition: 0.2s; }
+        .btn-primary:active { transform: scale(0.96); opacity: 0.9; }
+        #splash { position: fixed; inset: 0; background: #FFF; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .input-group { background: white; border-radius: 15px; padding: 5px 15px; border: 1px solid #E5E7EB; margin-bottom: 12px; }
+        .input-group input { width: 100%; border: none; padding: 12px 0; outline: none; font-weight: 600; }
+    </style>
+</head>
+<body>
 
-        async function doLogin() {
-            const n = document.getElementById('log-nik').value;
-            const p = document.getElementById('log-pass').value;
-            if(!n || !p) return alert("Isi NIK & Password!");
+    <div id="splash">
+        <img src="Logo_SBSI.png" class="w-32 animate__animated animate__pulse animate__infinite">
+        <div class="absolute bottom-10 text-gray-400 font-bold tracking-widest text-xs uppercase">Federasi SBSI Bitung</div>
+    </div>
 
-            document.getElementById('btn-login').innerText = "MENGECEK...";
+    <div id="page-login" class="page active !bg-[#002D57] items-center justify-between p-10 text-center">
+        <div class="mt-10 w-full">
+            <img src="Logo My SBSI.png" class="w-72 mx-auto drop-shadow-2xl animate__animated animate__fadeInDown">
+        </div>
+
+        <div class="w-full max-w-sm space-y-4">
+            <div class="bg-white/5 p-4 rounded-2xl backdrop-blur-md border border-white/10 mb-6 text-left">
+                <p class="text-blue-300 text-[10px] font-black uppercase tracking-widest">Iklan SBSI :</p>
+                <p class="text-white text-xs leading-relaxed italic">"Keadilan bagi buruh adalah napas perjuangan kami. Bergabunglah!"</p>
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="nik" placeholder="NIK Anggota">
+            </div>
+            <div class="input-group">
+                <input type="password" id="pass" placeholder="Password">
+            </div>
+            <button onclick="prosesLogin()" id="btn-login" class="btn-primary">MASUK</button>
+        </div>
+        <div class="mb-4"></div>
+    </div>
+
+    <div id="page-dash" class="page">
+        <div class="bca-blue p-8 pb-14 rounded-b-[50px] text-white shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <img id="u-foto" src="" class="w-16 h-16 rounded-2xl border-2 border-white object-cover shadow-lg">
+                <button onclick="logout()" class="bg-red-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Keluar</button>
+            </div>
+            <p class="text-xs opacity-70 uppercase tracking-tighter">Selamat Datang,</p>
+            <h2 id="u-nama" class="text-2xl font-black">Memuat...</h2>
+            <p id="u-perusahaan" class="text-[10px] mt-1 font-bold bg-white/20 inline-block px-3 py-1 rounded-full uppercase">-</p>
+        </div>
+
+        <div class="px-6 -mt-8 scroll-v">
+            <div onclick="bukaKalkulator()" class="bg-white p-6 rounded-3xl shadow-xl flex items-center gap-5 border-b-4 border-orange-500 active:scale-95 transition cursor-pointer">
+                <div class="text-4xl">⚖️</div>
+                <div>
+                    <h4 class="font-black text-blue-900">Hitung Hak PHK</h4>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase">Sesuai PP 35 Tahun 2021</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-hasil" class="page">
+        <div class="p-4 bca-blue text-white flex justify-between items-center no-print">
+            <button onclick="navigasi('page-dash')" class="font-black text-xs">HOME</button>
+            <h2 class="font-black italic">REKAP HAK ANDA</h2>
+            <button onclick="window.print()" class="bg-white text-blue-900 px-4 py-1 rounded-lg font-black text-xs">PRINT</button>
+        </div>
+        <div class="scroll-v" id="print-area">
+            <div class="text-center border-b-4 border-double border-blue-900 pb-4 mb-6">
+                <h1 class="text-2xl font-black">FEDERASI SBSI BITUNG</h1>
+                <p class="text-[10px] font-bold">DOKUMEN REKAPITULASI HAK PESANGON</p>
+            </div>
+            <div class="bg-blue-900 p-8 rounded-3xl text-white text-center shadow-xl mb-6">
+                <p class="text-[10px] font-bold opacity-60 uppercase mb-2">Total Estimasi Terima</p>
+                <h2 id="res-total" class="text-4xl font-black text-orange-400">Rp 0</h2>
+            </div>
+            <div id="res-detail" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <script>
+        // GANTI DENGAN URL GAS BAPAK
+        const URL_GAS = "https://script.google.com/macros/s/11MlrKJh3vrP2s3xSiRj94ogLuv33qc/exec"; 
+        
+        let userData = null;
+        let dbUMP = {};
+
+        window.onload = () => {
+            setTimeout(() => { document.getElementById('splash').style.display='none'; }, 2500);
+        };
+
+        async function prosesLogin() {
+            const n = document.getElementById('nik').value;
+            const p = document.getElementById('pass').value;
+            if(!n || !p) return alert("Lengkapi data!");
+
+            const btn = document.getElementById('btn-login');
+            btn.innerText = "MENGECEK..."; btn.disabled = true;
+
             try {
-                const r = await fetch(`${URL_GAS}?action=login&nik=${n}&pass=${p}`);
-                const d = await r.json();
-                if(d.status === "success") {
-                    user = d.user;
-                    document.getElementById('u-nama').innerText = user.nama;
-                    document.getElementById('u-pt').innerText = user.perusahaan;
-                    document.getElementById('u-foto').src = user.foto || "https://via.placeholder.com/100";
+                const response = await fetch(`${URL_GAS}?action=login&nik=${n}&pass=${p}`);
+                const data = await response.json();
+                
+                if(data.status === "success") {
+                    userData = data.user;
+                    document.getElementById('u-nama').innerText = userData.nama;
+                    document.getElementById('u-perusahaan').innerText = userData.perusahaan;
+                    document.getElementById('u-foto').src = userData.foto || "https://via.placeholder.com/150";
                     
-                    // Langsung ambil data UMP dari Spreadsheet
-                    const rUmp = await fetch(`${URL_GAS}?action=getUMP`);
-                    const dUmp = await rUmp.json();
+                    // Ambil Database UMP
+                    const resUmp = await fetch(`${URL_GAS}?action=getUMP`);
+                    const dUmp = await resUmp.json();
                     dbUMP = dUmp.data;
                     
                     navigasi('page-dash');
-                } else { alert(d.message); }
-            } catch(e) { alert("Server Error. Pastikan URL GAS benar & diset 'Anyone'"); }
-            document.getElementById('btn-login').innerText = "MASUK";
+                } else { alert(data.message); }
+            } catch(e) { alert("Gagal terhubung ke database!"); }
+            btn.innerText = "MASUK"; btn.disabled = false;
         }
 
-        function doLogout() { location.reload(); }
-
-        function startWizard() {
-            curIdx = 0;
-            renderWiz();
-            navigasi('page-wiz');
+        function navigasi(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
-        function renderWiz() {
-            const th = years[curIdx];
-            document.getElementById('wiz-label').innerText = "INPUT GAJI TAHUN " + th;
-            let h = "";
-            ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"].forEach((b, i) => {
-                h += `<div class="bca-card p-4 flex justify-between items-center mb-2">
-                    <span class="text-xs font-bold text-gray-400 uppercase">${b}</span>
-                    <input type="text" id="g-${i+1}" oninput="fmtCur(this)" placeholder="Rp 0" class="w-32 text-right font-black text-blue-900 outline-none bg-transparent">
-                </div>`;
-            });
-            document.getElementById('wiz-container').innerHTML = h;
-        }
+        function logout() { location.reload(); }
 
-        function duplikat() {
-            let v = "";
-            for(let i=1; i<=12; i++) if(document.getElementById('g-'+i).value) v = document.getElementById('g-'+i).value;
-            for(let i=1; i<=12; i++) document.getElementById('g-'+i).value = v;
-        }
-
-        function nextWiz() {
-            const th = years[curIdx];
-            storage.tunjangan[th] = { 
-                thr: document.getElementById('wiz-thr').value, 
-                komp: document.getElementById('wiz-komp').value 
-            };
+        function bukaKalkulator() {
+            // Logika simulasi langsung ke hasil karena data UMP sudah ditarik otomatis
+            const tahunPhk = "2025"; // Misal
+            const ump = dbUMP[tahunPhk] || 0;
             
-            if(curIdx < years.length - 1) {
-                curIdx++;
-                renderWiz();
-                document.getElementById('wiz-thr').value = "";
-                document.getElementById('wiz-komp').value = "";
-            } else {
-                showFinal();
-            }
-        }
-
-        function showFinal() {
-            const thPhk = years[years.length-1];
-            const umpTerakhir = dbUMP[thPhk] || 0;
+            if(ump == 0) return alert("Data UMP Tahun " + tahunPhk + " belum ada di Spreadsheet!");
             
-            // LOGIKA HITUNG (Simulasi)
-            let total = parseInt(umpTerakhir) * 9;
-            
-            document.getElementById('res-total').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(total);
+            const pesangon = ump * 9; // Contoh rumus sederhana
+            document.getElementById('res-total').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(pesangon);
             document.getElementById('res-detail').innerHTML = `
-                <div class="bca-card p-5 border-l-8 border-sky-500">
-                    <p class="text-[10px] font-bold text-gray-400">UMP TAHUN ${thPhk}</p>
-                    <p class="font-black text-blue-900">Rp ${new Intl.NumberFormat('id-ID').format(umpTerakhir)}</p>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-l-8 border-blue-900 flex justify-between">
+                    <span class="text-xs font-bold text-gray-500">Patokan UMP ${tahunPhk}</span>
+                    <span class="font-black text-blue-900">Rp ${new Intl.NumberFormat('id-ID').format(ump)}</span>
                 </div>
             `;
             navigasi('page-hasil');
