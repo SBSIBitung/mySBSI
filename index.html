@@ -2,32 +2,36 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>mySBSI - Federasi SBSI Kota Bitung</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
         .bg-mysbsi { background-color: #003366; }
-        .page { display: none; position: absolute; width: 100%; min-height: 100vh; top: 0; left: 0; background: #f3f4f6; }
-        .active { display: block; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #f3f4f6; }
+        .page { position: fixed; inset: 0; width: 100%; height: 100%; display: none; flex-direction: column; overflow: hidden; background: #f3f4f6; }
+        .active { display: flex; }
+        .scrollable { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         #splash { position: fixed; inset: 0; background: white; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        /* Hilangkan spinner pada input number */
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="font-sans">
 
     <div id="splash">
         <img src="Logo_SBSI.png" class="w-32 animate__animated animate__zoomIn">
         <h1 class="mt-4 text-2xl font-bold text-blue-900 animate__animated animate__fadeInUp">SBSI KOTA BITUNG</h1>
     </div>
 
-    <div id="page-login" class="page flex flex-col items-center justify-center p-6">
+    <div id="page-login" class="page items-center justify-center p-6">
         <img src="Logo My SBSI.png" class="w-48 mb-8">
         <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md">
-            <div id="slider-iklan" class="mb-6 rounded-xl overflow-hidden border bg-gray-50 h-40 flex items-center justify-center text-center p-4">
-                <p class="text-gray-400 text-xs italic">Memuat info terbaru Federasi...</p>
+            <div id="slider-iklan" class="mb-6 rounded-xl overflow-hidden border bg-gray-50 h-40 flex items-center justify-center text-center p-2">
+                <p class="text-gray-400 text-xs italic">Memuat info Federasi...</p>
             </div>
-            <input type="text" id="nik" placeholder="NIK Pekerja" class="w-full p-4 mb-4 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-900">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 mb-6 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-900">
+            <input type="text" id="nik" placeholder="NIK Pekerja" class="w-full p-4 mb-4 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-900 text-sm">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 mb-6 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-900 text-sm">
             <button onclick="prosesLogin()" id="btn-login" class="w-full bg-mysbsi text-white p-4 rounded-2xl font-bold shadow-lg">MASUK</button>
         </div>
     </div>
@@ -37,9 +41,9 @@
             <span class="font-bold">mySBSI Mobile</span>
             <button onclick="logout()" class="bg-red-600 px-4 py-1 rounded-xl text-xs font-bold">LOGOUT</button>
         </nav>
-        <div class="p-6">
-            <div class="bg-white p-6 rounded-3xl shadow-sm flex items-center mb-6 border-l-8 border-orange-500 animate__animated animate__fadeInLeft">
-                <img id="user-foto" src="https://via.placeholder.com/150" class="w-16 h-16 rounded-full mr-4 border">
+        <div class="scrollable p-6">
+            <div class="bg-white p-6 rounded-3xl shadow-sm flex items-center mb-6 border-l-8 border-orange-500">
+                <img id="user-foto" src="https://via.placeholder.com/150" class="w-16 h-16 rounded-full mr-4 border shadow-inner">
                 <div>
                     <h3 id="user-nama" class="font-bold text-blue-900 text-lg leading-none">-</h3>
                     <p id="user-perusahaan" class="text-gray-500 text-sm mt-1">-</p>
@@ -48,61 +52,80 @@
             <div class="grid grid-cols-2 gap-4">
                 <div onclick="bukaWizardStep1()" class="bg-white p-6 rounded-3xl shadow-md text-center border active:scale-95 transition cursor-pointer">
                     <span class="text-4xl">🧮</span>
-                    <p class="font-bold text-xs mt-2 text-blue-900">HITUNG PHK</p>
+                    <p class="font-bold text-[10px] mt-2 text-blue-900 uppercase tracking-tighter">Hitung Hak PHK</p>
                 </div>
                 <div class="bg-white p-6 rounded-3xl shadow-md text-center border active:scale-95 transition cursor-pointer">
                     <span class="text-4xl">📚</span>
-                    <p class="font-bold text-xs mt-2 text-blue-900">EDUKASI</p>
+                    <p class="font-bold text-[10px] mt-2 text-blue-900 uppercase tracking-tighter">Edukasi Buruh</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="page-wiz-1" class="page bg-white">
+    <div id="page-wiz-1" class="page">
         <nav class="bg-mysbsi p-4 text-white flex items-center shadow-md">
             <button onclick="navigasi('page-dashboard')" class="mr-4">←</button>
-            <span class="font-bold">Langkah 1: Masa Kerja</span>
+            <span class="font-bold text-sm">Masa Kerja</span>
         </nav>
         <div class="p-6">
-            <label class="text-xs text-gray-400 font-bold uppercase">Tanggal Masuk Kerja</label>
+            <label class="text-[10px] text-gray-400 font-bold uppercase">Tanggal Masuk</label>
             <input type="date" id="tgl-masuk" class="w-full p-4 border rounded-2xl mb-4 mt-1 outline-none">
-            <label class="text-xs text-gray-400 font-bold uppercase">Tanggal Kena PHK</label>
+            <label class="text-[10px] text-gray-400 font-bold uppercase">Tanggal PHK</label>
             <input type="date" id="tgl-phk" class="w-full p-4 border rounded-2xl mb-8 mt-1 outline-none">
-            <button onclick="lanjutKeUpah()" class="w-full bg-orange-500 text-white p-4 rounded-2xl font-bold shadow-lg">LANJUT KE RIWAYAT UPAH</button>
+            <button onclick="lanjutKeUpah()" class="w-full bg-orange-500 text-white p-4 rounded-2xl font-bold shadow-lg uppercase tracking-widest text-sm">Lanjut</button>
         </div>
     </div>
 
-    <div id="page-wiz-2" class="page bg-white">
+    <div id="page-wiz-2" class="page">
         <nav class="bg-mysbsi p-4 text-white flex items-center shadow-md">
             <button onclick="navigasi('page-wiz-1')" class="mr-4">←</button>
-            <span id="label-tahun-jalan" class="font-bold">Tahun -</span>
+            <span id="label-tahun-jalan" class="font-bold text-sm text-orange-400 italic">Tahun -</span>
         </nav>
-        <div class="p-6 flex flex-col h-[calc(100vh-64px)]">
-            <div class="flex-1 overflow-y-auto">
-                <p class="text-xs text-gray-400 mb-4 italic text-center">Isi upah bulan pertama, lalu gunakan tombol duplikat jika gaji sama sepanjang tahun.</p>
-                <div id="container-input-bulan" class="space-y-3 pb-6">
-                    </div>
+        <div class="scrollable p-4 space-y-3" id="container-input-bulan">
             </div>
-            <div class="pt-4 border-t space-y-3">
-                <button onclick="duplikatGaji()" class="w-full bg-blue-100 text-blue-900 p-3 rounded-xl font-bold text-xs border border-blue-200 uppercase">Duplikat Gaji ke Sisa Bulan</button>
-                <button onclick="prosesTahunBerikutnya()" id="btn-next-tahun" class="w-full bg-orange-500 text-white p-4 rounded-2xl font-bold shadow-lg">SIMPAN & LANJUT</button>
-            </div>
+        <div class="p-4 bg-white border-t space-y-3">
+            <button onclick="duplikatGajiPintar()" class="w-full bg-blue-100 text-blue-900 p-3 rounded-xl font-bold text-[10px] border border-blue-200 uppercase">Duplikat Gaji Terakhir</button>
+            <button onclick="prosesTahunBerikutnya()" id="btn-next-tahun" class="w-full bg-orange-500 text-white p-4 rounded-2xl font-bold shadow-lg uppercase text-sm">Simpan & Lanjut</button>
         </div>
     </div>
 
     <script>
-        const URL_GAS = "https://script.google.com/macros/s/AKfycbxHbDVOgtG-SAK3PIVtLtHtfMr9duHQMfdB0DVCC65nWkbbId1DAs3bnK0njHkHXa1d/exec";
+        const URL_GAS = "https://script.google.com/macros/s/AKfycbz4YXJYW-dCPXPCTlzdZAUD1pE2ZSQ19YiRvj3Yn6L74NAy1lE3Ftg2vubHl1prU8g/exec";
 
-        let currentUser = null;
         let tahunList = [];
         let indexTahunSekarang = 0;
-        let databaseUpah = {}; // { "2023-1": 3000000, ... }
+        let databaseUpah = {};
+
+        // Fungsi Format Rupiah Real-time
+        function formatRupiah(angka, prefix) {
+            let number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+        }
+
+        function handleInputRupiah(e) {
+            let plainValue = e.target.value.replace(/[^0-9]/g, '');
+            e.target.value = formatRupiah(e.target.value, 'Rp ');
+            
+            // Simpan nilai asli (angka saja) ke memory
+            const idBulan = e.target.id.split('-')[1];
+            simpanKeMemory(idBulan, plainValue);
+        }
 
         window.addEventListener('load', () => {
             muatIklan();
             setTimeout(() => {
-                document.getElementById('splash').classList.add('animate__animated', 'animate__fadeOut');
-                setTimeout(() => { document.getElementById('splash').style.display = 'none'; checkSession(); }, 500);
+                document.getElementById('splash').style.display = 'none';
+                checkSession();
             }, 2500);
         });
 
@@ -115,26 +138,25 @@
             try {
                 const res = await fetch(`${URL_GAS}?action=getIklan`);
                 const data = await res.json();
-                if(data.length > 0) document.getElementById('slider-iklan').innerHTML = `<img src="${data[0].url}" class="w-full h-full object-cover rounded-lg shadow-inner">`;
-            } catch (e) { console.log("Iklan error"); }
+                if(data.length > 0) document.getElementById('slider-iklan').innerHTML = `<img src="${data[0].url}" class="w-full h-full object-cover rounded-lg">`;
+            } catch (e) { }
         }
 
         async function prosesLogin() {
             const nik = document.getElementById('nik').value;
             const pass = document.getElementById('pass').value;
             const btn = document.getElementById('btn-login');
-            if(!nik || !pass) return alert("NIK & Password wajib!");
-            btn.innerText = "MENCOCOKKAN..."; btn.disabled = true;
+            if(!nik || !pass) return alert("Isi NIK & Password!");
+            btn.innerText = "MENGHUBUNGKAN..."; btn.disabled = true;
             try {
                 const res = await fetch(`${URL_GAS}?action=login&nik=${nik}&pass=${pass}`);
                 const data = await res.json();
                 if(data.status === "success") { localStorage.setItem("session_sbsi", JSON.stringify(data.user)); renderUser(data.user); }
                 else { alert(data.message); btn.innerText = "MASUK"; btn.disabled = false; }
-            } catch (e) { alert("Server error. Cek URL GAS!"); btn.innerText = "MASUK"; btn.disabled = false; }
+            } catch (e) { alert("Error Server!"); btn.innerText = "MASUK"; btn.disabled = false; }
         }
 
         function renderUser(user) {
-            currentUser = user;
             document.getElementById('user-nama').innerText = user.nama;
             document.getElementById('user-perusahaan').innerText = user.perusahaan;
             if(user.foto) document.getElementById('user-foto').src = user.foto;
@@ -146,73 +168,72 @@
             if(session) renderUser(JSON.parse(session)); else navigasi('page-login');
         }
 
-        function logout() { if(confirm("Keluar?")) { localStorage.removeItem("session_sbsi"); location.reload(); } }
+        function logout() { if(confirm("Logout?")) { localStorage.removeItem("session_sbsi"); location.reload(); } }
 
         function bukaWizardStep1() { navigasi('page-wiz-1'); }
 
         function lanjutKeUpah() {
-            const masuk = document.getElementById('tgl-masuk').value;
-            const phk = document.getElementById('tgl-phk').value;
-            if(!masuk || !phk) return alert("Pilih tanggal!");
-
-            const thnMasuk = new Date(masuk).getFullYear();
-            const thnPhk = new Date(phk).getFullYear();
+            const m = document.getElementById('tgl-masuk').value;
+            const p = document.getElementById('tgl-phk').value;
+            if(!m || !p) return alert("Pilih tanggal!");
             tahunList = [];
-            for(let t = thnMasuk; t <= thnPhk; t++) tahunList.push(t);
-            
+            for(let t = new Date(m).getFullYear(); t <= new Date(p).getFullYear(); t++) tahunList.push(t);
             indexTahunSekarang = 0;
             renderFormTahun();
         }
 
         function renderFormTahun() {
-            const tahun = tahunList[indexTahunSekarang];
-            document.getElementById('label-tahun-jalan').innerText = "Riwayat Upah Tahun " + tahun;
-            
+            const thn = tahunList[indexTahunSekarang];
+            document.getElementById('label-tahun-jalan').innerText = "Riwayat Upah Tahun " + thn;
             const blnNama = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
             let html = "";
             blnNama.forEach((nama, i) => {
-                const key = `${tahun}-${i+1}`;
-                const val = databaseUpah[key] || "";
+                const key = `${thn}-${i+1}`;
+                const rawVal = databaseUpah[key] || "";
+                const formattedVal = rawVal ? formatRupiah(rawVal, 'Rp ') : "";
                 html += `
                 <div class="flex items-center justify-between bg-white p-4 border rounded-2xl shadow-sm">
-                    <span class="text-sm font-bold text-gray-600">${nama}</span>
-                    <input type="number" id="inp-${i+1}" value="${val}" onchange="simpanKeMemory(${i+1}, this.value)" 
-                           placeholder="0" class="w-32 text-right font-bold text-blue-900 outline-none">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase">${nama}</span>
+                    <input type="text" id="inp-${i+1}" value="${formattedVal}" oninput="handleInputRupiah(event)" 
+                           placeholder="Rp 0" class="w-40 text-right font-black text-blue-900 outline-none bg-transparent">
                 </div>`;
             });
             document.getElementById('container-input-bulan').innerHTML = html;
-            
             const btnNext = document.getElementById('btn-next-tahun');
             btnNext.innerText = (indexTahunSekarang === tahunList.length - 1) ? "HITUNG FINAL" : "SIMPAN & LANJUT KE " + tahunList[indexTahunSekarang+1];
-            
             navigasi('page-wiz-2');
         }
 
         function simpanKeMemory(bulan, val) {
-            const tahun = tahunList[indexTahunSekarang];
-            databaseUpah[`${tahun}-${bulan}`] = val;
+            const thn = tahunList[indexTahunSekarang];
+            databaseUpah[`${thn}-${bulan}`] = val;
         }
 
-        function duplikatGaji() {
-            const gajiJan = document.getElementById('inp-1').value;
-            if(!gajiJan) return alert("Isi gaji bulan Januari terlebih dahulu!");
-            for(let i=1; i<=12; i++) {
-                document.getElementById('inp-' + i).value = gajiJan;
-                simpanKeMemory(i, gajiJan);
+        function duplikatGajiPintar() {
+            let gajiTerakhir = "";
+            let bulanTerakhirDiisi = 0;
+            for(let i = 1; i <= 12; i++) {
+                const val = databaseUpah[`${tahunList[indexTahunSekarang]}-${i}`];
+                if(val && val > 0) {
+                    gajiTerakhir = val;
+                    bulanTerakhirDiisi = i;
+                }
+            }
+            if(bulanTerakhirDiisi === 0) return alert("Isi satu bulan!");
+            for(let i = bulanTerakhirDiisi + 1; i <= 12; i++) {
+                simpanKeMemory(i, gajiTerakhir);
+                document.getElementById('inp-' + i).value = formatRupiah(gajiTerakhir, 'Rp ');
             }
         }
 
         function prosesTahunBerikutnya() {
-            // Validasi: pastikan setidaknya Januari diisi
-            const tahun = tahunList[indexTahunSekarang];
-            if(!databaseUpah[`${tahun}-1`]) return alert("Minimal isi gaji bulan Januari!");
-
+            const thn = tahunList[indexTahunSekarang];
+            if(!databaseUpah[`${thn}-1`]) return alert("Isi upah Januari!");
             if(indexTahunSekarang < tahunList.length - 1) {
                 indexTahunSekarang++;
                 renderFormTahun();
             } else {
-                alert("Data lengkap! Mengirim data ke Server SBSI untuk kalkulasi pesangon sesuai PP 35/2021...");
-                console.log("FINAL DATA:", databaseUpah);
+                alert("Data Tersimpan! Tahap selanjutnya: Perhitungan Otomatis Hak PHK.");
             }
         }
     </script>
