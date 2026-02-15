@@ -3,117 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>mySBSI - FSBSI DPC KOTA BITUNG</title>
+    <title>mySBSI - Federasi Bitung</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&display=swap');
         body { font-family: 'Public Sans', sans-serif; background: #002D57; margin: 0; overflow: hidden; }
         .page { display: none; position: absolute; inset: 0; background: #F3F4F6; flex-direction: column; }
         .active { display: flex !important; }
-        .bca-blue { background: #002D57; }
-        .btn-orange { background: #D97706; color: white; padding: 16px; border-radius: 12px; font-weight: 800; width: 100%; text-transform: uppercase; }
-        #splash { position: fixed; inset: 0; background: #FFF; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s; }
-        .card-upah { background: white; margin-bottom: 8px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        input.upah-field { text-align: right; font-weight: 800; color: #002D57; border: none; outline: none; width: 50%; background: transparent; }
+        
+        /* FIX LOGO: Menghilangkan pinggiran putih */
+        .logo-clean {
+            width: 280px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            mix-blend-mode: lighten; /* Membuat bagian gelap tetap dan putih hilang jika background sama */
+            object-fit: contain;
+        }
+
+        .btn-hitung { background: #8B4513; color: white; padding: 18px; border-radius: 12px; font-weight: 900; width: 100%; text-transform: uppercase; }
+        .input-box { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .input-box input { border: none; outline: none; text-align: right; width: 60%; font-weight: 800; color: #002D57; }
     </style>
 </head>
 <body>
 
-    <div id="splash">
-        <img src="Logo_SBSI.png" class="w-32">
-        <p class="mt-4 font-black text-gray-400 text-xs tracking-widest">FEDERASI SBSI BITUNG</p>
-    </div>
-
     <div id="page-login" class="page active !bg-[#002D57] items-center justify-center p-10">
         <div class="w-full max-w-sm text-center">
-            <img src="Logo My SBSI.png" class="w-64 mx-auto mb-10">
-            <div class="space-y-3">
-                <input type="text" id="nik" placeholder="NIK Anggota" class="w-full p-4 rounded-xl border-none font-bold">
-                <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl border-none font-bold">
-                <button onclick="doLogin()" id="btn-login" class="w-full p-4 bg-[#00AEEF] text-white rounded-xl font-black">MASUK</button>
+            <img src="Logo_SBSI.png" class="w-20 mx-auto mb-4">
+            <img src="Logo My SBSI.png" class="logo-clean mx-auto mb-10">
+            
+            <div class="space-y-4">
+                <input type="text" id="nik" placeholder="NIK Anggota" class="w-full p-4 rounded-xl font-bold">
+                <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl font-bold">
+                <button onclick="doLogin()" class="w-full p-4 bg-[#00AEEF] text-white rounded-xl font-black shadow-lg">MASUK</button>
             </div>
         </div>
     </div>
 
     <div id="page-wizard" class="page">
-        <div class="bca-blue p-4 text-white flex items-center gap-4">
-            <button onclick="navigasi('page-dash')">←</button>
-            <h2 id="wiz-title" class="font-black italic text-sm text-orange-400 tracking-tighter">Riwayat Upah Tahun 2021</h2>
+        <div class="bg-[#002D57] p-4 text-white flex items-center gap-4">
+            <button onclick="location.reload()">←</button>
+            <h2 class="font-black italic text-sm">RIWAYAT TAHUN 2025</h2>
         </div>
-        <div class="scroll-v p-4 flex-1 overflow-y-auto" id="list-upah">
+        <div class="flex-1 overflow-y-auto p-4" id="list-input">
             </div>
-        <div class="p-4 bg-white border-t space-y-2">
-            <button onclick="duplikatGaji()" class="w-full py-2 text-[10px] font-bold text-blue-800 bg-blue-50 rounded-lg uppercase">Duplikat Gaji Terakhir</button>
-            <button id="btn-next" onclick="prosesNextYear()" class="btn-orange">Simpan & Lanjut ke 2022</button>
+        <div class="p-4 bg-white border-t">
+            <button onclick="selesaiInput()" class="btn-hitung">SELESAI INPUT DATA</button>
         </div>
     </div>
 
-    <div id="page-ump" class="page items-center justify-center p-8 text-center">
-        <div class="card bg-white p-8 rounded-[40px] shadow-2xl w-full">
-            <div class="text-4xl mb-4">🏢</div>
-            <h3 class="font-black text-blue-900 text-sm uppercase mb-1">Patokan UMP Saat PHK</h3>
-            <p id="ump-year-label" class="text-[10px] text-gray-400 font-bold mb-6">Tahun 2025</p>
-            <div id="ump-value" class="text-3xl font-black text-blue-900 mb-8">Rp 0</div>
-            <button onclick="navigasi('page-hasil-akhir')" class="w-full py-4 bg-green-600 text-white rounded-2xl font-black uppercase">Lihat Hasil Perhitungan</button>
+    <div id="page-ump" class="page items-center justify-center p-8">
+        <div class="bg-white p-10 rounded-[40px] shadow-2xl w-full text-center border border-orange-100">
+            <img src="https://cdn-icons-png.flaticon.com/512/3232/3232872.png" class="w-16 mx-auto mb-4">
+            <h3 class="font-black text-[#002D57] text-sm uppercase">PATOKAN UMP SAAT PHK</h3>
+            <p id="ump-label" class="text-[10px] text-gray-400 font-bold mb-6">TAHUN 2025</p>
+            <div id="ump-display" class="text-4xl font-black text-[#002D57] mb-10">Rp 0</div>
+            <button onclick="lihatHasil()" class="w-full py-5 bg-[#10B981] text-white rounded-2xl font-black uppercase shadow-xl">Lihat Hasil Perhitungan</button>
         </div>
     </div>
 
     <script>
-        const URL_GAS = "https://script.google.com/macros/s/AKfycbxIA5NjEr5vYM588QRSFa4nq0cYgU41fthaaXFpwebR-cP23aUZLhoCGjpF6e739cD2/exec";
-        let user = null, dbUmp = {}, currentYear = 2021, targetYear = 2025;
-
-        window.onload = () => { setTimeout(() => document.getElementById('splash').style.opacity='0', 2500); setTimeout(() => document.getElementById('splash').style.display='none', 3000); };
+        const URL_GAS = "https://script.google.com/macros/s/AKfycbwZtwj9JFD-jEbqEucC9293Us5ftZh85khLp8xegvRCGM_fsoLjmyRdcYuqFs_KJHg/exec";
+        let user = null, dbUmp = {};
 
         async function doLogin() {
             const n = document.getElementById('nik').value, p = document.getElementById('pass').value;
             const res = await fetch(`${URL_GAS}?action=login&nik=${n}&pass=${p}`).then(r => r.json());
             if(res.status === "success") {
                 user = res.user;
-                const init = await fetch(`${URL_GAS}?action=getInitData&nik=${user.nik}`).then(r => r.json());
-                dbUmp = init.ump;
-                startWizard();
+                const umpRes = await fetch(`${URL_GAS}?action=getUMP`).then(r => r.json());
+                dbUmp = umpRes.data;
+                renderWizard();
+                navigasi('page-wizard');
             } else alert(res.message);
         }
 
-        function startWizard() {
-            currentYear = 2021; // Contoh start
-            renderUpah();
-            navigasi('page-wizard');
-        }
-
-        function renderUpah() {
-            document.getElementById('wiz-title').innerText = `Riwayat Upah Tahun ${currentYear}`;
+        function renderWizard() {
             const months = ["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
             let html = "";
-            months.forEach((m, i) => {
-                html += `<div class="card-upah">
-                    <span class="text-[10px] font-black text-gray-400">${m}</span>
-                    <input type="text" class="upah-field" placeholder="Rp 0" oninput="formatRupiah(this)">
+            months.forEach(m => {
+                html += `<div class="input-box">
+                    <span class="text-[10px] font-black text-gray-400 uppercase">${m}</span>
+                    <input type="text" placeholder="Rp 0" oninput="fmt(this)">
                 </div>`;
             });
-            document.getElementById('list-upah').innerHTML = html;
-            document.getElementById('btn-next').innerText = currentYear === targetYear ? "Selesai & Hitung" : `Simpan & Lanjut ke ${currentYear+1}`;
+            document.getElementById('list-input').innerHTML = html;
         }
 
-        function formatRupiah(el) {
+        function fmt(el) {
             let v = el.value.replace(/[^0-9]/g, '');
             el.value = v ? "Rp " + new Intl.NumberFormat('id-ID').format(v) : "";
         }
 
-        async function prosesNextYear() {
-            // Logika simpan data ke sheet Input_Upah_Detail bisa ditambahkan di sini via fetch
-            if(currentYear < targetYear) {
-                currentYear++;
-                renderUpah();
-            } else {
-                showUmpResult();
-            }
-        }
-
-        function showUmpResult() {
-            const valUmp = dbUmp[targetYear] || 0;
-            document.getElementById('ump-year-label').innerText = `TAHUN ${targetYear}`;
-            document.getElementById('ump-value').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(valUmp);
+        function selesaiInput() {
+            // Sesuai gambar image_9dd6bb.png
+            alert("Menghitung Pesangon & Kompensasi sesuai PP 35/2021...");
+            const valUmp = dbUmp["2025"] || 0;
+            document.getElementById('ump-display').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(valUmp);
             navigasi('page-ump');
         }
 
