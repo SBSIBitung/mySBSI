@@ -9,8 +9,9 @@
     <style>
         .bg-mysbsi { background-color: #003366; }
         body, html { margin: 0; padding: 0; height: 100vh; width: 100vw; overflow: hidden; background: #f3f4f6; }
-        .page { display: none; position: absolute; inset: 0; width: 100%; height: 100%; flex-direction: column; background: #f3f4f6; z-index: 10; }
-        .active { display: flex; z-index: 50; }
+        /* Perbaikan Navigasi: Halaman yang tidak aktif benar-benar ditiadakan */
+        .page { display: none; position: absolute; inset: 0; width: 100%; height: 100%; flex-direction: column; background: #f3f4f6; }
+        .active { display: flex !important; z-index: 50; }
         .scrollable { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         #splash { position: fixed; inset: 0; background: white; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     </style>
@@ -19,14 +20,14 @@
 
     <div id="splash">
         <img src="Logo_SBSI.png" class="w-24 animate__animated animate__pulse animate__infinite">
-        <h1 class="mt-4 text-xl font-bold text-blue-900 uppercase">SBSI KOTA BITUNG</h1>
+        <h1 class="mt-4 text-xl font-bold text-blue-900">SBSI KOTA BITUNG</h1>
     </div>
 
-    <div id="page-login" class="page items-center justify-center p-6">
+    <div id="page-login" class="page items-center justify-center p-6 active">
         <img src="Logo My SBSI.png" class="w-40 mb-8">
         <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm border">
-            <input type="text" id="nik" placeholder="NIK" class="w-full p-4 mb-4 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-900 text-sm">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 mb-6 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-900 text-sm">
+            <input type="text" id="nik" placeholder="NIK" class="w-full p-4 mb-4 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-900">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 mb-6 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-900">
             <button onclick="prosesLogin()" id="btn-login" class="w-full bg-mysbsi text-white p-4 rounded-2xl font-bold shadow-lg">MASUK</button>
         </div>
     </div>
@@ -37,13 +38,13 @@
             <button onclick="logout()" class="text-xs bg-red-600 px-3 py-1 rounded-lg">KELUAR</button>
         </nav>
         <div class="p-6">
-            <div id="user-info" class="bg-white p-6 rounded-3xl shadow-sm border-l-8 border-orange-500 mb-6">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border-l-8 border-orange-500 mb-6">
                 <h3 id="user-nama" class="font-bold text-blue-900">-</h3>
                 <p id="user-perusahaan" class="text-xs text-gray-500">-</p>
             </div>
             <button onclick="navigasi('page-wiz-1')" class="w-full bg-white p-6 rounded-3xl shadow-md border flex items-center justify-center gap-4">
                 <span class="text-3xl">🧮</span>
-                <span class="font-bold text-blue-900">HITUNG HAK PHK</span>
+                <span class="font-bold text-blue-900 uppercase">Hitung Hak PHK</span>
             </button>
         </div>
     </div>
@@ -51,14 +52,14 @@
     <div id="page-wiz-1" class="page">
         <nav class="bg-mysbsi p-4 text-white flex items-center shadow-md">
             <button onclick="navigasi('page-dashboard')" class="mr-4">←</button>
-            <span class="font-bold text-sm">Masa Kerja Presisi</span>
+            <span class="font-bold text-sm">Masa Kerja</span>
         </nav>
         <div class="p-6">
-            <label class="text-[10px] text-gray-400 font-bold uppercase">Tanggal Masuk (Awal Kerja)</label>
-            <input type="date" id="tgl-masuk" class="w-full p-4 border rounded-2xl mb-4 mt-1 outline-none text-sm">
-            <label class="text-[10px] text-gray-400 font-bold uppercase">Tanggal PHK (Hari Terakhir)</label>
-            <input type="date" id="tgl-phk" class="w-full p-4 border rounded-2xl mb-8 mt-1 outline-none text-sm">
-            <button onclick="lanjutKeUpah()" class="w-full bg-orange-500 text-white p-4 rounded-2xl font-bold shadow-lg uppercase">Mulai Input Upah</button>
+            <label class="text-[10px] text-gray-400 font-bold uppercase">Tanggal Masuk</label>
+            <input type="date" id="tgl-masuk" class="w-full p-4 border rounded-2xl mb-4 mt-1 text-sm outline-none">
+            <label class="text-[10px] text-gray-400 font-bold uppercase">Tanggal PHK</label>
+            <input type="date" id="tgl-phk" class="w-full p-4 border rounded-2xl mb-8 mt-1 text-sm outline-none">
+            <button onclick="lanjutKeUpah()" class="w-full bg-orange-500 text-white p-4 rounded-2xl font-bold shadow-lg">MULAI INPUT UPAH</button>
         </div>
     </div>
 
@@ -67,9 +68,6 @@
             <button onclick="navigasi('page-wiz-1')" class="mr-4">←</button>
             <span id="label-tahun-jalan" class="font-bold text-sm">Tahun -</span>
         </nav>
-        <div class="p-3 bg-yellow-50 text-[10px] text-orange-700 text-center border-b italic">
-            *Bulan pertama & terakhir dihitung prorata (harian) jika tidak penuh sebulan.
-        </div>
         <div class="scrollable p-4 space-y-3" id="container-input-bulan"></div>
         <div class="p-4 bg-white border-t space-y-2">
             <button onclick="duplikatGajiPintar()" class="w-full bg-blue-50 text-blue-900 p-3 rounded-xl font-bold text-[10px] border border-blue-100 uppercase">Duplikat Gaji Terakhir</button>
@@ -78,8 +76,21 @@
     </div>
 
     <script>
+        // MASUKKAN URL WEB APP (GAS) DI SINI
         const URL_GAS = "https://script.google.com/macros/s/AKfycbzAcegVePGyFMQey6jfxRQm9nqoO5X2LAkRjT-1S6Wn-Z0bMUt1LE07kzRLAJfg_bLu/exec"; 
+
         let tahunList = [], indexTahunSekarang = 0, databaseUpah = {}, tglMasuk, tglPhk;
+
+        function navigasi(pageId) {
+            // Sembunyikan semua halaman secara total sebelum menampilkan yang baru
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+                p.style.display = 'none'; 
+            });
+            const target = document.getElementById(pageId);
+            target.classList.add('active');
+            target.style.display = 'flex';
+        }
 
         function formatRupiah(angka, prefix) {
             let number_string = angka.replace(/[^,\d]/g, '').toString(),
@@ -99,13 +110,12 @@
         }
 
         window.addEventListener('load', () => {
-            setTimeout(() => { document.getElementById('splash').style.display='none'; checkSession(); }, 2000);
+            setTimeout(() => { 
+                document.getElementById('splash').style.display='none'; 
+                const session = localStorage.getItem("session_sbsi");
+                if(session) renderUser(JSON.parse(session)); else navigasi('page-login');
+            }, 2000);
         });
-
-        function navigasi(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-        }
 
         async function prosesLogin() {
             const nik = document.getElementById('nik').value;
@@ -114,20 +124,17 @@
             try {
                 const res = await fetch(`${URL_GAS}?action=login&nik=${nik}&pass=${pass}`);
                 const data = await res.json();
-                if(data.status === "success") { localStorage.setItem("session_sbsi", JSON.stringify(data.user)); renderUser(data.user); }
-                else alert(data.message);
-            } catch (e) { alert("Cek URL GAS!"); }
+                if(data.status === "success") { 
+                    localStorage.setItem("session_sbsi", JSON.stringify(data.user)); 
+                    renderUser(data.user); 
+                } else alert(data.message);
+            } catch (e) { alert("Periksa koneksi atau URL GAS!"); }
         }
 
         function renderUser(user) {
             document.getElementById('user-nama').innerText = user.nama;
             document.getElementById('user-perusahaan').innerText = user.perusahaan;
             navigasi('page-dashboard');
-        }
-
-        function checkSession() {
-            const session = localStorage.getItem("session_sbsi");
-            if(session) renderUser(JSON.parse(session)); else navigasi('page-login');
         }
 
         function logout() { localStorage.removeItem("session_sbsi"); location.reload(); }
@@ -148,8 +155,6 @@
             document.getElementById('label-tahun-jalan').innerText = "Tahun " + thn;
             const blnNama = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
             let html = "";
-            
-            // Logika Prorata: Tampilkan bulan hanya jika masuk masa kerja
             let mStart = (thn === tglMasuk.getFullYear()) ? tglMasuk.getMonth() : 0;
             let mEnd = (thn === tglPhk.getFullYear()) ? tglPhk.getMonth() : 11;
 
@@ -157,14 +162,11 @@
                 const key = `${thn}-${i+1}`;
                 const rawVal = databaseUpah[key] || "";
                 let infoProrata = "";
-
-                // Deteksi jika bulan pertama/terakhir tidak full (Prorata)
                 if(thn === tglMasuk.getFullYear() && i === mStart && tglMasuk.getDate() > 1) {
                     infoProrata = `<span class="text-[8px] text-orange-500 font-bold italic">Mulai tgl ${tglMasuk.getDate()} (Prorata)</span>`;
                 } else if(thn === tglPhk.getFullYear() && i === mEnd && tglPhk.getDate() < 28) {
                     infoProrata = `<span class="text-[8px] text-orange-500 font-bold italic">Sampai tgl ${tglPhk.getDate()} (Prorata)</span>`;
                 }
-
                 html += `
                 <div class="bg-white p-4 border rounded-2xl shadow-sm flex items-center justify-between">
                     <div>
@@ -185,7 +187,6 @@
             let gTerakhir = ""; let bTerakhir = 0;
             let mStart = (thn === tglMasuk.getFullYear()) ? tglMasuk.getMonth() : 0;
             let mEnd = (thn === tglPhk.getFullYear()) ? tglPhk.getMonth() : 11;
-
             for(let i = mStart; i <= mEnd; i++) {
                 const val = databaseUpah[`${thn}-${i+1}`];
                 if(val > 0) { gTerakhir = val; bTerakhir = i; }
