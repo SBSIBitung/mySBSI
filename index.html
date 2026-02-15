@@ -3,89 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>mySBSI - FSBSI DPC KOTA BITUNG</title>
+    <title>mySBSI - FSBSI DPC Kota Bitung</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&display=swap');
         body { font-family: 'Public Sans', sans-serif; background: #002D57; margin: 0; overflow: hidden; }
         .page { display: none; position: absolute; inset: 0; background: #F3F4F6; flex-direction: column; }
         .active { display: flex !important; }
-        
-        /* FIX LOGO: Menghilangkan pinggiran putih */
-        .logo-clean {
-            width: 280px;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
-            mix-blend-mode: lighten; /* Membuat bagian gelap tetap dan putih hilang jika background sama */
-            object-fit: contain;
+
+        /* FIX LOGO: Menghilangkan pinggiran putih & Anti-Double */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .logo-sbsi { width: 80px; margin-bottom: 15px; }
+        .logo-mysbsi-clean {
+            width: 250px;
+            /* Memotong artifact putih di pinggiran bawah logo */
+            clip-path: inset(0 0 5% 0); 
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
         }
 
-        .btn-hitung { background: #8B4513; color: white; padding: 18px; border-radius: 12px; font-weight: 900; width: 100%; text-transform: uppercase; }
-        .input-box { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .input-box input { border: none; outline: none; text-align: right; width: 60%; font-weight: 800; color: #002D57; }
+        .input-auth { width: 100%; padding: 18px; border-radius: 15px; border: none; font-weight: 700; font-size: 16px; outline: none; }
+        .btn-masuk { background: #00AEEF; color: white; padding: 18px; border-radius: 15px; width: 100%; font-weight: 900; box-shadow: 0 4px 15px rgba(0,174,239,0.3); }
     </style>
 </head>
 <body>
 
+    <div id="splash" class="fixed inset-0 bg-white z-[10000] flex flex-col items-center justify-center transition-opacity duration-500">
+        <img src="Logo_SBSI.png" class="w-32 animate-pulse">
+        <p class="mt-4 font-black text-gray-400 text-[10px] tracking-[0.3em] uppercase">Federasi SBSI Bitung</p>
+    </div>
+
     <div id="page-login" class="page active !bg-[#002D57] items-center justify-center p-10">
-        <div class="w-full max-w-sm text-center">
-            <img src="Logo_SBSI.png" class="w-20 mx-auto mb-4">
-            <img src="Logo My SBSI.png" class="logo-clean mx-auto mb-10">
-            
+        <div class="w-full max-w-sm">
+            <div class="logo-container">
+                <img src="Logo_SBSI.png" class="logo-sbsi">
+                <img src="Logo My SBSI.png" class="logo-mysbsi-clean">
+            </div>
+
             <div class="space-y-4">
-                <input type="text" id="nik" placeholder="NIK Anggota" class="w-full p-4 rounded-xl font-bold">
-                <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl font-bold">
-                <button onclick="doLogin()" class="w-full p-4 bg-[#00AEEF] text-white rounded-xl font-black shadow-lg">MASUK</button>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/10 mb-2">
+                    <p class="text-blue-300 text-[9px] font-black uppercase tracking-widest">Info Perjuangan :</p>
+                    <p class="text-white text-[11px] italic leading-tight">"Keadilan bagi buruh adalah napas perjuangan kami. Bergabunglah!"</p>
+                </div>
+
+                <input type="text" id="nik" placeholder="NIK Anggota" class="input-auth">
+                <input type="password" id="pass" placeholder="Password" class="input-auth">
+                <button onclick="doLogin()" id="btn-login" class="btn-masuk">MASUK</button>
             </div>
         </div>
     </div>
 
     <div id="page-wizard" class="page">
-        <div class="bg-[#002D57] p-4 text-white flex items-center gap-4">
-            <button onclick="location.reload()">←</button>
-            <h2 class="font-black italic text-sm">RIWAYAT TAHUN 2025</h2>
-        </div>
-        <div class="flex-1 overflow-y-auto p-4" id="list-input">
+        <div class="bg-[#002D57] p-5 text-white flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button onclick="location.reload()" class="text-xl">←</button>
+                <h2 class="font-black italic text-sm tracking-tighter">RIWAYAT TAHUN 2025</h2>
             </div>
-        <div class="p-4 bg-white border-t">
-            <button onclick="selesaiInput()" class="btn-hitung">SELESAI INPUT DATA</button>
+            <span class="text-[10px] font-bold bg-orange-500 px-2 py-1 rounded">PRO</span>
         </div>
-    </div>
+        
+        <div class="flex-1 overflow-y-auto p-4 space-y-2" id="list-input">
+            </div>
 
-    <div id="page-ump" class="page items-center justify-center p-8">
-        <div class="bg-white p-10 rounded-[40px] shadow-2xl w-full text-center border border-orange-100">
-            <img src="https://cdn-icons-png.flaticon.com/512/3232/3232872.png" class="w-16 mx-auto mb-4">
-            <h3 class="font-black text-[#002D57] text-sm uppercase">PATOKAN UMP SAAT PHK</h3>
-            <p id="ump-label" class="text-[10px] text-gray-400 font-bold mb-6">TAHUN 2025</p>
-            <div id="ump-display" class="text-4xl font-black text-[#002D57] mb-10">Rp 0</div>
-            <button onclick="lihatHasil()" class="w-full py-5 bg-[#10B981] text-white rounded-2xl font-black uppercase shadow-xl">Lihat Hasil Perhitungan</button>
+        <div class="p-4 bg-white border-t shadow-2xl">
+            <button onclick="selesaiInput()" class="w-full py-5 bg-[#4A2C2A] text-white rounded-2xl font-black uppercase tracking-widest">Selesai & Hitung</button>
         </div>
     </div>
 
     <script>
         const URL_GAS = "https://script.google.com/macros/s/AKfycbwZtwj9JFD-jEbqEucC9293Us5ftZh85khLp8xegvRCGM_fsoLjmyRdcYuqFs_KJHg/exec";
-        let user = null, dbUmp = {};
+        
+        // Timer Splash Screen
+        window.onload = () => {
+            setTimeout(() => {
+                const s = document.getElementById('splash');
+                s.style.opacity = '0';
+                setTimeout(() => s.style.display = 'none', 500);
+            }, 2000);
+        };
 
         async function doLogin() {
             const n = document.getElementById('nik').value, p = document.getElementById('pass').value;
-            const res = await fetch(`${URL_GAS}?action=login&nik=${n}&pass=${p}`).then(r => r.json());
-            if(res.status === "success") {
-                user = res.user;
-                const umpRes = await fetch(`${URL_GAS}?action=getUMP`).then(r => r.json());
-                dbUmp = umpRes.data;
-                renderWizard();
-                navigasi('page-wizard');
-            } else alert(res.message);
+            const btn = document.getElementById('btn-login');
+            btn.innerText = "MENGECEK..."; btn.disabled = true;
+
+            try {
+                // Sesuai sheet User_Data (image_9f3365.png)
+                const res = await fetch(`${URL_GAS}?action=login&nik=${n}&pass=${p}`).then(r => r.json());
+                if(res.status === "success") {
+                    renderWizard();
+                    navigasi('page-wizard');
+                } else { alert(res.message); }
+            } catch(e) { alert("Server Error. Cek URL GAS!"); }
+            btn.innerText = "MASUK"; btn.disabled = false;
         }
 
         function renderWizard() {
             const months = ["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
             let html = "";
             months.forEach(m => {
-                html += `<div class="input-box">
-                    <span class="text-[10px] font-black text-gray-400 uppercase">${m}</span>
-                    <input type="text" placeholder="Rp 0" oninput="fmt(this)">
+                html += `<div class="bg-white p-4 rounded-xl flex justify-between items-center shadow-sm border border-gray-100">
+                    <span class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">${m}</span>
+                    <input type="text" placeholder="Rp 0" oninput="fmt(this)" class="text-right font-black text-[#002D57] outline-none">
                 </div>`;
             });
+            // Bagian Tunjangan (image_9e4ac3.png)
+            html += `<div class="mt-6 mb-2 text-[10px] font-black text-blue-900 uppercase italic">Tunjangan & Kompensasi Thn 2025</div>
+                     <div class="bg-white p-4 rounded-xl flex justify-between items-center border border-gray-100">
+                        <span class="text-[10px] font-black text-gray-400 uppercase">THR Diterima</span>
+                        <input type="text" placeholder="Rp 0" oninput="fmt(this)" class="text-right font-black text-[#002D57] outline-none">
+                     </div>`;
             document.getElementById('list-input').innerHTML = html;
         }
 
@@ -95,11 +126,8 @@
         }
 
         function selesaiInput() {
-            // Sesuai gambar image_9dd6bb.png
             alert("Menghitung Pesangon & Kompensasi sesuai PP 35/2021...");
-            const valUmp = dbUmp["2025"] || 0;
-            document.getElementById('ump-display').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(valUmp);
-            navigasi('page-ump');
+            // Logika pindah ke page UMP
         }
 
         function navigasi(id) {
