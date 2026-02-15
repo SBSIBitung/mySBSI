@@ -3,120 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>mySBSI - Dashboard Anggota</title>
+    <title>mySBSI Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&display=swap');
         body { font-family: 'Public Sans', sans-serif; background: #f8fafc; }
-        .page { display: none; min-height: 100vh; }
-        .active { display: flex !important; flex-direction: column; }
-        .menu-card { background: white; border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer; border: 1px solid #f1f5f9; }
-        .menu-card:active { transform: scale(0.95); background: #f1f5f9; }
-        .menu-icon { font-size: 24px; margin-bottom: 10px; color: #00AEEF; }
-        .menu-label { font-size: 11px; font-weight: 900; color: #334155; text-transform: uppercase; line-height: 1.2; }
+        .page { display: none; min-height: 100vh; flex-direction: column; }
+        .active { display: flex !important; }
+        .history-card { background: white; border-radius: 24px; padding: 20px; border: 2px dashed #00AEEF; margin: 20px; }
     </style>
 </head>
 <body>
 
     <div id="page-login" class="page active !bg-[#002D57] items-center justify-center p-8">
-        <img src="Logo My SBSI.png" class="w-64 mb-10">
-        <div class="w-full max-w-sm space-y-4">
-            <input type="text" id="nik" placeholder="NIK" class="w-full p-5 rounded-2xl font-bold outline-none">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-5 rounded-2xl font-bold outline-none">
-            <button onclick="doLogin()" class="w-full p-5 bg-[#00AEEF] text-white rounded-2xl font-black">MASUK</button>
-        </div>
+        <button onclick="doLogin()" id="btn-login" class="w-full max-w-sm p-5 bg-[#00AEEF] text-white rounded-2xl font-black">MASUK SISTEM</button>
     </div>
 
     <div id="page-dashboard" class="page">
-        <div class="bg-[#002D57] p-8 pb-12 rounded-b-[40px] text-white relative">
-            <div class="flex items-center gap-4">
-                <img id="user-foto" src="" class="w-16 h-16 rounded-2xl border-2 border-[#00AEEF] object-cover">
+        <div class="bg-[#002D57] p-8 pb-14 rounded-b-[50px] text-white relative shadow-xl">
+            <div class="flex items-center gap-5">
+                <img id="user-foto" src="" class="w-20 h-20 rounded-3xl border-4 border-[#00AEEF] object-cover shadow-lg">
                 <div>
-                    <h2 id="user-nama" class="font-black text-xl leading-tight">...</h2>
-                    <p id="user-perusahaan" class="text-xs opacity-70 font-bold italic">...</p>
-                </div>
-            </div>
-            <div class="absolute -bottom-6 left-0 right-0 px-8">
-                <div class="bg-[#00AEEF] p-4 rounded-2xl shadow-lg flex justify-between items-center">
-                    <span class="text-[10px] font-black italic">STATUS ANGGOTA: AKTIF</span>
-                    <i class="fas fa-check-circle"></i>
+                    <h2 id="user-nama" class="font-black text-2xl uppercase">...</h2>
+                    <p id="user-perusahaan" class="text-xs opacity-70 italic">...</p>
                 </div>
             </div>
         </div>
 
-        <div class="p-8 mt-8 grid grid-cols-2 gap-4">
-            <div class="menu-card" onclick="navigasi('page-dates')">
-                <i class="fas fa-calculator menu-icon"></i>
-                <div class="menu-label">Hitung Hak Pekerja</div>
-            </div>
-            <div class="menu-card" onclick="alert('Fitur Video Segera Hadir')">
-                <i class="fas fa-play-circle menu-icon"></i>
-                <div class="menu-label">Video SBSI</div>
-            </div>
-            <div class="menu-card" onclick="alert('Dasar Hukum Sedang Disusun')">
-                <i class="fas fa-gavel menu-icon"></i>
-                <div class="menu-label">Dasar Hukum</div>
-            </div>
-            <div class="menu-card" onclick="alert('Chat Menghubungkan ke Admin...')">
-                <i class="fas fa-comments menu-icon"></i>
-                <div class="menu-label">Chat Advokasi</div>
+        <div id="last-calc-info" class="hidden">
+            <div class="history-card mt-[-30px] relative z-10 shadow-xl">
+                <div class="flex justify-between items-start mb-3">
+                    <span class="text-[9px] font-black bg-orange-100 text-orange-600 px-3 py-1 rounded-full uppercase">Kalkulasi Terakhir</span>
+                    <span id="last-date" class="text-[9px] text-gray-400 font-bold">...</span>
+                </div>
+                <h3 id="last-total" class="text-2xl font-black text-[#002D57]">Rp 0</h3>
+                <div class="flex gap-2 mt-4">
+                    <button onclick="viewLastResult()" class="flex-1 p-3 bg-[#00AEEF] text-white rounded-xl text-[10px] font-black uppercase">Cetak / Lihat</button>
+                    <button onclick="editLastCalc()" class="flex-1 p-3 bg-slate-100 text-slate-700 rounded-xl text-[10px] font-black uppercase">Edit Data</button>
+                </div>
             </div>
         </div>
-        
-        <div class="px-8 mt-2">
-            <button onclick="location.reload()" class="w-full p-4 bg-red-50 text-red-600 rounded-2xl font-black text-xs uppercase tracking-widest">Logout</button>
-        </div>
-    </div>
 
-    <div id="page-dates" class="page">
-        <div class="bg-[#002D57] p-6 text-white font-black italic">KALKULATOR HAK PHK</div>
-        <div class="p-6 space-y-4 flex-1">
-            <div class="bg-white p-6 rounded-3xl border">
-                <label class="text-[10px] font-black text-gray-400 block mb-2 uppercase">Tanggal Masuk</label>
-                <input type="date" id="tgl-masuk" class="w-full font-bold outline-none text-xl">
+        <div class="p-8 grid grid-cols-2 gap-4">
+            <div class="bg-white p-6 rounded-3xl text-center shadow-sm border" onclick="navigasi('page-dates')">
+                <i class="fas fa-plus-circle text-2xl text-[#00AEEF] mb-2"></i>
+                <p class="text-[10px] font-black uppercase">Hitung Baru</p>
             </div>
-            <div class="bg-white p-6 rounded-3xl border">
-                <label class="text-[10px] font-black text-gray-400 block mb-2 uppercase">Tanggal PHK</label>
-                <input type="date" id="tgl-phk" class="w-full font-bold outline-none text-xl">
             </div>
-        </div>
-        <div class="p-6 flex gap-3">
-            <button onclick="navigasi('page-dashboard')" class="btn-nav btn-gray flex-1">Batal</button>
-            <button onclick="initWizard()" class="btn-nav btn-blue flex-2 w-full font-black">Lanjut</button>
-        </div>
     </div>
 
     <script>
-        const URL_GAS = "https://script.google.com/macros/s/AKfycbwIxB6RS5SdJUklGgnVp3flOydU7UQb5bRkJ65kO5g4nsLNGLQ0F8dpAS3D2YJnnhj8/exec";
-        let userLogin = {};
+        const URL_GAS = "https://script.google.com/macros/s/AKfycbwnuBs25r-q2VF4E0dejTkj2i8yMjhoWxMFWMz9PdDvaF0EK1JF0zXDGx5RsDYcyct9/exec";
+        let DB_UMP = {};
+        let dataUpah = {}, dataTHR = {}, years = [], curIdx = 0, loggedUser = {}, lastSavedData = null;
 
         async function doLogin() {
             const nik = document.getElementById('nik').value;
             const pass = document.getElementById('pass').value;
-            const res = await fetch(`${URL_GAS}?action=login&nik=${nik}&pass=${pass}`).then(r => r.json());
-            
-            if(res.status === "success") {
-                userLogin = res;
-                document.getElementById('user-nama').innerText = res.nama;
-                document.getElementById('user-foto').src = res.foto;
-                document.getElementById('user-perusahaan').innerText = res.perusahaan;
-                navigasi('page-dashboard');
-                
-                // Ambil UMP di background
-                const u = await fetch(`${URL_GAS}?action=getUMP`).then(r => r.json());
-                DB_UMP = u.data;
-            } else {
-                alert(res.message);
+            try {
+                const res = await fetch(`${URL_GAS}?action=login&nik=${nik}&pass=${pass}`).then(r => r.json());
+                if(res.status === "success") {
+                    loggedUser = res;
+                    document.getElementById('user-nama').innerText = res.nama;
+                    document.getElementById('user-foto').src = res.foto;
+                    document.getElementById('user-perusahaan').innerText = res.perusahaan;
+                    
+                    // Cek Histori
+                    await checkHistory(nik);
+                    
+                    navigasi('page-dashboard');
+                    const u = await fetch(`${URL_GAS}?action=getUMP`).then(r => r.json());
+                    DB_UMP = u.data;
+                } else { alert(res.message); }
+            } catch(e) { alert("Error!"); }
+        }
+
+        async function checkHistory(nik) {
+            const res = await fetch(`${URL_GAS}?action=getLastData&nik=${nik}`).then(r => r.json());
+            if(res.status === "success" && res.data) {
+                lastSavedData = res.data;
+                document.getElementById('last-calc-info').classList.remove('hidden');
+                document.getElementById('last-date').innerText = new Date(res.data.timestamp).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+                document.getElementById('last-total').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(res.data.totalHak);
             }
+        }
+
+        function editLastCalc() {
+            if(!lastSavedData) return;
+            // ISI OTOMATIS FORMULIR
+            document.getElementById('tgl-masuk').value = lastSavedData.tglMasuk.split('T')[0];
+            document.getElementById('tgl-phk').value = lastSavedData.tglPhk.split('T')[0];
+            dataUpah = lastSavedData.rawUpah;
+            dataTHR = lastSavedData.rawTHR;
+            
+            navigasi('page-dates');
+            alert("Data lama berhasil dimuat. Silakan edit bagian yang diperlukan.");
+        }
+
+        function viewLastResult() {
+            // Langsung ke halaman hasil menggunakan data terakhir
+            finalize(true); 
+        }
+
+        async function finalize(isViewOnly = false) {
+            // ... (Logika hitungan sama seperti reset basic) ...
+            
+            // Tambahkan raw data ke payload saat save
+            if(!isViewOnly) {
+                const payload = {
+                    // ... data lainnya ...
+                    rawUpah: dataUpah,
+                    rawTHR: dataTHR
+                };
+                fetch(`${URL_GAS}?action=saveHistori&data=${encodeURIComponent(JSON.stringify(payload))}`);
+            }
+            
+            // Render Result...
+            navigasi('page-result');
         }
 
         function navigasi(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
-
-        // [SISA LOGIKA KALKULATOR SAMA SEPERTI "RESET BASIC"]
     </script>
 </body>
 </html>
