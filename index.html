@@ -3,56 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>mySBSI - Kalkulator Hak Buruh</title>
+    <title>mySBSI - Perjuangan Buruh</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&display=swap');
-        body { font-family: 'Public Sans', sans-serif; background: #002D57; margin: 0; }
-        .page { display: none; min-height: 100vh; flex-direction: column; background: #F3F4F6; }
+        body { font-family: 'Public Sans', sans-serif; background: #f8fafc; margin: 0; }
+        .page { display: none; min-height: 100vh; flex-direction: column; }
         .active { display: flex !important; }
-        .btn-nav { padding: 16px; border-radius: 14px; font-weight: 900; text-transform: uppercase; cursor: pointer; text-align: center; font-size: 13px; }
-        .btn-blue { background: #00AEEF; color: white; }
+        
+        /* Premium UI Components */
+        .btn-nav { padding: 18px; border-radius: 16px; font-weight: 900; text-transform: uppercase; cursor: pointer; text-align: center; font-size: 13px; transition: 0.3s; }
+        .btn-blue { background: #00AEEF; color: white; box-shadow: 0 4px 14px rgba(0, 174, 239, 0.4); }
         .btn-dark { background: #3D2B2A; color: white; }
-        .btn-gray { background: #E2E8F0; color: #64748b; }
-        .card-input { background: white; padding: 14px 20px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
-        input[type="number"]::-webkit-inner-spin-button { display: none; }
-        @media print { .no-print { display: none; } .page { display: block; background: white; } }
+        .btn-gray { background: #e2e8f0; color: #64748b; }
+        
+        .card-input { background: white; padding: 16px 20px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+        .card-input span { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; }
+        .card-input input { text-align: right; font-weight: 900; color: #002D57; border: none; outline: none; width: 40%; font-size: 16px; }
+
+        /* Result Card Styling */
+        .result-card { background: white; border-radius: 28px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+        .result-header { background: linear-gradient(135deg, #002D57 0%, #0056a3 100%); padding: 24px; color: white; text-align: center; }
+        .hak-item { display: flex; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid #f1f5f9; }
+        .total-box { background: #00AEEF; color: white; padding: 24px; margin: 20px; border-radius: 20px; text-align: center; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            .page { display: block !important; }
+            .result-card { border: none; box-shadow: none; width: 100%; }
+            .result-header { background: #002D57 !important; -webkit-print-color-adjust: exact; }
+            .total-box { border: 2px solid #00AEEF; color: #000 !important; -webkit-print-color-adjust: exact; }
+        }
     </style>
 </head>
 <body>
 
     <div id="page-login" class="page active !bg-[#002D57] items-center justify-center p-8">
-        <img src="Logo My SBSI.png" class="w-64 mb-12">
+        <img src="Logo My SBSI.png" class="w-64 mb-10">
         <div class="w-full max-w-sm space-y-3">
-            <input type="text" id="nik" placeholder="NIK Anggota" class="w-full p-4 rounded-xl font-bold outline-none">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl font-bold outline-none">
-            <button onclick="doLogin()" id="btn-login" class="w-full p-4 bg-[#00AEEF] text-white rounded-xl font-black">MASUK</button>
+            <input type="text" id="nik" placeholder="NIK Anggota" class="w-full p-4 rounded-xl font-bold outline-none border-2 border-transparent focus:border-[#00AEEF]">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-4 rounded-xl font-bold outline-none border-2 border-transparent focus:border-[#00AEEF]">
+            <button onclick="doLogin()" id="btn-login" class="w-full p-4 bg-[#00AEEF] text-white rounded-xl font-black shadow-lg">MASUK SISTEM</button>
         </div>
     </div>
 
     <div id="page-dates" class="page">
-        <div class="bg-[#002D57] p-5 text-white font-black italic">PENGATURAN MASA KERJA</div>
+        <div class="bg-[#002D57] p-6 text-white font-black italic shadow-lg">MASA KERJA</div>
         <div class="p-6 space-y-4 flex-1">
-            <div class="bg-white p-6 rounded-3xl shadow-sm">
-                <label class="text-[10px] font-black text-gray-400 uppercase block mb-2">Tanggal Masuk</label>
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                <label class="text-[10px] font-black text-gray-400 uppercase block mb-2">Tanggal Masuk Kerja</label>
                 <input type="date" id="tgl-masuk" class="w-full font-bold outline-none text-lg">
             </div>
-            <div class="bg-white p-6 rounded-3xl shadow-sm">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
                 <label class="text-[10px] font-black text-gray-400 uppercase block mb-2">Tanggal PHK</label>
                 <input type="date" id="tgl-phk" class="w-full font-bold outline-none text-lg">
             </div>
         </div>
-        <div class="p-6 flex gap-3"><div onclick="location.reload()" class="btn-nav btn-gray flex-1">Logout</div><div onclick="initWizard()" class="btn-nav btn-blue flex-2 w-full">Mulai Hitung</div></div>
+        <div class="p-6 flex gap-3 no-print">
+            <div onclick="location.reload()" class="btn-nav btn-gray flex-1">Logout</div>
+            <div onclick="initWizard()" class="btn-nav btn-blue flex-2 w-full">Lanjut</div>
+        </div>
     </div>
 
     <div id="page-upah-tahun" class="page">
-        <div class="bg-[#002D57] p-5 text-white flex justify-between items-center">
-            <h2 id="title-upah" class="font-black italic text-sm">UPAH TAHUN ...</h2>
-            <span class="text-[9px] font-bold bg-white/20 px-2 py-1 rounded">SISTEM 25 HARI</span>
+        <div class="bg-[#002D57] p-6 text-white flex justify-between items-center shadow-md">
+            <h2 id="title-upah" class="font-black italic text-sm">TAHUN ...</h2>
+            <span class="text-[9px] font-bold bg-white/20 px-2 py-1 rounded">Harian x 25</span>
         </div>
         <div id="container-upah" class="flex-1 overflow-y-auto"></div>
-        <div class="p-4 bg-white border-t space-y-3">
-            <div onclick="duplikatUpah()" class="text-center text-blue-500 font-black text-[10px] uppercase cursor-pointer">Duplikat Upah Terakhir Ke Bulan Kosong</div>
+        <div class="p-4 bg-white border-t space-y-3 no-print">
+            <div onclick="duplikatUpah()" class="text-center text-blue-500 font-black text-[10px] uppercase cursor-pointer">Duplikat Nilai Ke Bawah</div>
             <div class="flex gap-2">
                 <div id="btn-upah-back" class="btn-nav btn-gray flex-1">Kembali</div>
                 <div onclick="navUpah(1)" class="btn-nav btn-blue flex-1">Lanjut</div>
@@ -61,18 +82,18 @@
     </div>
 
     <div id="page-thr-tahun" class="page">
-        <div class="bg-[#002D57] p-5 text-white font-black italic text-sm" id="title-thr">THR TAHUN ...</div>
+        <div class="bg-[#002D57] p-6 text-white font-black italic text-sm shadow-md" id="title-thr">THR TAHUN ...</div>
         <div class="p-6 space-y-4 flex-1">
-            <div class="bg-white p-6 rounded-2xl shadow-sm">
-                <label class="text-[10px] font-black text-gray-400 block mb-2">THR YANG DITERIMA</label>
-                <input type="number" id="inp-thr" class="w-full text-2xl font-black text-[#002D57] outline-none" placeholder="0">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                <label class="text-[10px] font-black text-gray-400 block mb-3 uppercase">THR DITERIMA (Rp)</label>
+                <input type="number" id="inp-thr" class="w-full text-3xl font-black text-[#002D57] outline-none" placeholder="0">
             </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm">
-                <label class="text-[10px] font-black text-gray-400 block mb-2">KOMPENSASI DITERIMA</label>
-                <input type="number" id="inp-komp" class="w-full text-2xl font-black text-[#002D57] outline-none" placeholder="0">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                <label class="text-[10px] font-black text-gray-400 block mb-3 uppercase">KOMPENSASI DITERIMA (Rp)</label>
+                <input type="number" id="inp-komp" class="w-full text-3xl font-black text-[#002D57] outline-none" placeholder="0">
             </div>
         </div>
-        <div class="p-4 bg-white border-t space-y-3">
+        <div class="p-4 bg-white border-t space-y-3 no-print">
             <div onclick="duplikatTHR()" class="text-center text-blue-500 font-black text-[10px] uppercase cursor-pointer">Duplikat THR Ke Semua Tahun</div>
             <div class="flex gap-2">
                 <div onclick="navTHR(-1)" class="btn-nav btn-gray flex-1">Kembali</div>
@@ -82,70 +103,64 @@
     </div>
 
     <div id="page-result" class="page">
-        <div class="bg-[#002D57] p-5 text-white font-black italic">HASIL ANALISIS HAK</div>
-        <div id="container-result" class="flex-1 p-6 overflow-y-auto space-y-4"></div>
-        <div class="p-4 bg-white border-t grid grid-cols-2 gap-2">
-            <div onclick="navigasi('page-dates')" class="btn-nav btn-dark italic">HOME</div>
-            <div onclick="location.reload()" class="btn-nav btn-dark italic text-red-400">LOGOUT</div>
-            <div onclick="navigasi('page-print')" class="btn-nav btn-blue col-span-2">Cetak / Simpan PDF</div>
+        <div class="bg-[#002D57] p-6 text-white font-black italic no-print shadow-lg">HASIL REKAPITULASI</div>
+        <div class="flex-1 p-6 overflow-y-auto">
+            <div id="container-result" class="space-y-4"></div>
         </div>
-    </div>
-
-    <div id="page-print" class="page bg-white p-8">
-        <div class="text-center border-b-4 border-black pb-4 mb-6">
-            <h1 class="font-black text-xl uppercase">Rekapitulasi Hak Buruh</h1>
-            <p class="text-[10px] font-bold">Federasi SBSI Bitung - Sulawesi Utara</p>
-        </div>
-        <div id="print-area" class="text-sm space-y-4"></div>
-        <div class="mt-10 grid grid-cols-2 gap-2 no-print">
-            <div onclick="navigasi('page-result')" class="btn-nav btn-gray col-span-2">Kembali ke App</div>
-            <div onclick="window.print()" class="btn-nav btn-blue col-span-2">PRINT DOKUMEN</div>
-            <div onclick="navigasi('page-dates')" class="btn-nav btn-dark">HOME</div>
-            <div onclick="location.reload()" class="btn-nav btn-dark">LOGOUT</div>
+        <div class="p-6 bg-white border-t space-y-3 no-print">
+            <button onclick="window.print()" class="btn-nav btn-blue w-full">CETAK HASIL (PDF)</button>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="navigasi('page-dates')" class="btn-nav btn-dark italic">HOME</button>
+                <button onclick="location.reload()" class="btn-nav btn-dark italic text-red-400">LOGOUT</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const URL_GAS = "https://script.google.com/macros/s/AKfycbyUCQXFrLdvleBZ37xIc6KqAuBbckozjeCeayXawZ_q2OzXepWB_nxBfNhcT9qsbikQ/exec";
+        const URL_GAS = "https://script.google.com/macros/s/AKfycbx0uWSsfisyAavHg1hBNvvCG-S8aFrh_a3286epzPIScWqcum4BOHoJ02Dlq4xl-L_1/exec";
         let DB_UMP = {};
         let dataUpah = {}, dataTHR = {}, years = [], curIdx = 0;
 
         async function doLogin() {
-            const btn = document.getElementById('btn-login'); btn.innerText = "LOADING...";
+            const btn = document.getElementById('btn-login'); btn.innerText = "SEDANG MASUK...";
             try {
                 const res = await fetch(`${URL_GAS}?action=getUMP`).then(r => r.json());
                 DB_UMP = res.data;
                 navigasi('page-dates');
-            } catch(e) { alert("Cek Koneksi / URL GAS!"); }
-            btn.innerText = "MASUK";
+            } catch(e) { alert("Error: Cek Koneksi!"); }
+            btn.innerText = "MASUK SISTEM";
         }
 
         function initWizard() {
             const s = new Date(document.getElementById('tgl-masuk').value);
             const e = new Date(document.getElementById('tgl-phk').value);
-            if(isNaN(s) || isNaN(e)) return alert("Lengkapi Tanggal!");
+            if(isNaN(s) || isNaN(e)) return alert("Isi Tanggal!");
             years = []; for(let y=s.getFullYear(); y<=e.getFullYear(); y++) years.push(y);
             curIdx = 0; renderUpahYear(); navigasi('page-upah-tahun');
         }
 
         function renderUpahYear() {
             const y = years[curIdx], s = new Date(document.getElementById('tgl-masuk').value), e = new Date(document.getElementById('tgl-phk').value);
-            document.getElementById('title-upah').innerText = `UPAH TAHUN ${y}`;
+            document.getElementById('title-upah').innerText = `UPAH HARIAN - TAHUN ${y}`;
             let html = "";
             for(let m=0; m<12; m++) {
                 let d = new Date(y, m, 1);
                 if(d >= new Date(s.getFullYear(), s.getMonth(), 1) && d <= e) {
-                    let pengali = 25;
-                    if(y === s.getFullYear() && m === s.getMonth()) pengali = Math.min(25, new Date(y, m+1, 0).getDate() - s.getDate() + 1);
-                    const key = `${y}-${m}`, val = dataUpah[key] || "";
-                    html += `<div class="card-input"><div><span>${d.toLocaleString('id-ID',{month:'long'})}</span><br><small id="info-${key}" class="text-[8px] font-bold text-orange-500">BULANAN: Rp ${new Intl.NumberFormat('id-ID').format(val * pengali)}</small></div><input type="number" placeholder="Upah/Hari" value="${val}" oninput="updateVal('${key}',${pengali},this)" class="inp-u-val"></div>`;
+                    let p = 25;
+                    if(y === s.getFullYear() && m === s.getMonth()) p = Math.min(25, new Date(y, m+1, 0).getDate() - s.getDate() + 1);
+                    const k = `${y}-${m}`, val = dataUpah[k] || "";
+                    html += `
+                    <div class="card-input">
+                        <div><span>${d.toLocaleString('id-ID',{month:'long'})}</span><br><small id="info-${k}" class="text-[8px] font-bold text-orange-500">TOTAL: Rp ${new Intl.NumberFormat('id-ID').format(val * p)}</small></div>
+                        <input type="number" placeholder="Upah/Hari" value="${val}" oninput="updateVal('${k}',${p},this)" class="inp-u-val">
+                    </div>`;
                 }
             }
             document.getElementById('container-upah').innerHTML = html;
             document.getElementById('btn-upah-back').onclick = curIdx === 0 ? () => navigasi('page-dates') : () => navUpah(-1);
         }
 
-        function updateVal(k, p, el) { dataUpah[k] = el.value; document.getElementById(`info-${k}`).innerText = `BULANAN: Rp ${new Intl.NumberFormat('id-ID').format(el.value * p)}`; }
+        function updateVal(k, p, el) { dataUpah[k] = el.value; document.getElementById(`info-${k}`).innerText = `TOTAL: Rp ${new Intl.NumberFormat('id-ID').format(el.value * p)}`; }
 
         function navUpah(d) {
             curIdx += d;
@@ -154,10 +169,9 @@
         }
 
         function renderTHRYear() {
-            const y = years[curIdx];
-            document.getElementById('title-thr').innerText = `THR & KOMPENSASI ${y}`;
-            document.getElementById('inp-thr').value = dataTHR[`t-${y}`] || "";
-            document.getElementById('inp-komp').value = dataTHR[`k-${y}`] || "";
+            document.getElementById('title-thr').innerText = `THR & KOMPENSASI - ${years[curIdx]}`;
+            document.getElementById('inp-thr').value = dataTHR[`t-${years[curIdx]}`] || "";
+            document.getElementById('inp-komp').value = dataTHR[`k-${years[curIdx]}`] || "";
         }
 
         function navTHR(d) {
@@ -178,19 +192,17 @@
         function duplikatTHR() {
             const t = document.getElementById('inp-thr').value, k = document.getElementById('inp-komp').value;
             years.forEach(y => { dataTHR[`t-${y}`] = t; dataTHR[`k-${y}`] = k; });
-            alert("Terduplikasi!");
+            alert("THR disalin ke semua tahun masa kerja!");
         }
 
         function finalize() {
             const s = new Date(document.getElementById('tgl-masuk').value), e = new Date(document.getElementById('tgl-phk').value);
             const umpPhk = DB_UMP[e.getFullYear()] || 0;
-            let mkTahun = e.getFullYear() - s.getFullYear();
-            if (e.getMonth() < s.getMonth() || (e.getMonth() === s.getMonth() && e.getDate() < s.getDate())) mkTahun--;
+            let mk = e.getFullYear() - s.getFullYear();
+            if (e.getMonth() < s.getMonth() || (e.getMonth() === s.getMonth() && e.getDate() < s.getDate())) mk--;
 
-            // Hitung Pesangon PP 35/2021
-            let bPsg = mkTahun < 1 ? 1 : (mkTahun >= 8 ? 9 : mkTahun + 1);
-            let bUpmk = 0;
-            if(mkTahun >= 3) bUpmk = mkTahun < 6 ? 2 : (mkTahun < 9 ? 3 : (mkTahun < 12 ? 4 : (mkTahun < 15 ? 5 : (mkTahun < 18 ? 6 : (mkTahun < 21 ? 7 : (mkTahun < 24 ? 8 : 10))))));
+            let bPsg = mk < 1 ? 1 : (mk >= 8 ? 9 : mk + 1);
+            let bUpmk = mk < 3 ? 0 : (mk < 6 ? 2 : (mk < 9 ? 3 : (mk < 12 ? 4 : (mk < 15 ? 5 : (mk < 18 ? 6 : (mk < 21 ? 7 : (mk < 24 ? 8 : 10)))))));
 
             let totalSelisih = 0;
             Object.keys(dataUpah).forEach(k => {
@@ -198,26 +210,35 @@
                 if(bulanan < ref) totalSelisih += (ref - bulanan);
             });
 
-            const hasilH = `
-                <div class="bg-white p-6 rounded-3xl shadow-sm border-t-8 border-blue-500">
-                    <p class="text-[10px] font-black text-gray-400 uppercase">UMP Patokan Tahun ${e.getFullYear()}</p>
-                    <p class="text-2xl font-black text-[#002D57]">Rp ${new Intl.NumberFormat('id-ID').format(umpPhk)}</p>
-                </div>
-                <div class="bg-white p-6 rounded-3xl shadow-sm">
-                    <div class="flex justify-between text-xs font-bold mb-2"><span>Pesangon (${bPsg} bln)</span><span>Rp ${new Intl.NumberFormat('id-ID').format(bPsg * umpPhk)}</span></div>
-                    <div class="flex justify-between text-xs font-bold mb-2"><span>UPMK (${bUpmk} bln)</span><span>Rp ${new Intl.NumberFormat('id-ID').format(bUpmk * umpPhk)}</span></div>
-                    <div class="flex justify-between text-xs font-bold text-red-600"><span>Selisih Upah (Kurang Bayar)</span><span>Rp ${new Intl.NumberFormat('id-ID').format(totalSelisih)}</span></div>
-                </div>
-                <div class="bg-[#002D57] p-8 rounded-3xl text-center text-white">
-                    <p class="text-[10px] font-bold opacity-50 uppercase">Total Hak Terima</p>
-                    <p class="text-3xl font-black">Rp ${new Intl.NumberFormat('id-ID').format((bPsg+bUpmk)*umpPhk + totalSelisih)}</p>
+            const totalFinal = (bPsg + bUpmk) * umpPhk + totalSelisih;
+
+            const resHTML = `
+                <div class="result-card">
+                    <div class="result-header">
+                        <p class="text-[10px] font-bold opacity-70 uppercase tracking-widest">UMP PATOKAN (${e.getFullYear()})</p>
+                        <h1 class="text-3xl font-black">Rp ${new Intl.NumberFormat('id-ID').format(umpPhk)}</h1>
+                    </div>
+                    <div class="p-2">
+                        <div class="hak-item"><span class="text-gray-500 font-bold text-[10px] uppercase">Masa Kerja</span><span class="font-black">${mk} Tahun</span></div>
+                        <div class="hak-item"><span class="text-gray-500 font-bold text-[10px] uppercase">Pesangon (${bPsg} Bln)</span><span class="font-black">Rp ${new Intl.NumberFormat('id-ID').format(bPsg * umpPhk)}</span></div>
+                        <div class="hak-item"><span class="text-gray-500 font-bold text-[10px] uppercase">UPMK (${bUpmk} Bln)</span><span class="font-black">Rp ${new Intl.NumberFormat('id-ID').format(bUpmk * umpPhk)}</span></div>
+                        <div class="hak-item"><span class="text-red-500 font-bold text-[10px] uppercase">Selisih Upah (Kekurangan)</span><span class="font-black text-red-600">Rp ${new Intl.NumberFormat('id-ID').format(totalSelisih)}</span></div>
+                    </div>
+                    <div class="total-box">
+                        <p class="text-[10px] font-black uppercase opacity-80 mb-1">Total Hak Estimasi</p>
+                        <h2 class="text-3xl font-black">Rp ${new Intl.NumberFormat('id-ID').format(totalFinal)}</h2>
+                    </div>
+                    <p class="text-center text-[8px] text-gray-400 pb-5 italic font-bold">Federasi SBSI - Bukti Perhitungan Hak Buruh</p>
                 </div>`;
-            document.getElementById('container-result').innerHTML = hasilH;
-            document.getElementById('print-area').innerHTML = hasilH;
+            document.getElementById('container-result').innerHTML = resHTML;
             navigasi('page-result');
         }
 
-        function navigasi(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+        function navigasi(id) { 
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+            document.getElementById(id).classList.add('active'); 
+            window.scrollTo(0,0); 
+        }
     </script>
 </body>
 </html>
