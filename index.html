@@ -3,82 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>mySBSI - Audit Selisih Upah</title>
+    <title>mySBSI - Alat Audit Upah</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;800&display=swap');
         :root { --sbsi-blue: #002D57; --sbsi-light: #00AEEF; }
-        body { font-family: 'Public Sans', sans-serif; background: #FFFFFF; }
+        body { font-family: 'Public Sans', sans-serif; background: #FFFFFF; color: #1e293b; margin: 0; }
         .page { display: none; width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh; }
         .active-page { display: flex; flex-direction: column; }
         .card-audit { background: #f8fafc; border-radius: 20px; padding: 15px; border: 1px solid #edf2f7; margin-bottom: 12px; }
         .inp-harian { font-size: 1.1rem; font-weight: 800; color: var(--sbsi-blue); border: none; border-bottom: 2px solid #cbd5e1; text-align: right; outline: none; width: 120px; background: transparent; }
+        .btn-sbsi { background: var(--sbsi-blue); color: white; padding: 16px; border-radius: 18px; font-weight: 800; text-transform: uppercase; transition: all 0.2s; }
+        .btn-sbsi:active { transform: scale(0.97); opacity: 0.9; }
     </style>
 </head>
 <body>
 
     <div id="page-login" class="page active-page flex flex-col items-center justify-center p-8">
-        <img src="Logo_MySBSI.png" class="w-60 mb-10">
+        <img src="Logo_MySBSI.png" class="w-64 mb-10" alt="Logo">
         <div class="w-full space-y-4">
-            <input type="text" id="nik" placeholder="NIK Anggota" class="w-full p-4 bg-gray-50 rounded-2xl border outline-none font-bold">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl border outline-none font-bold">
-            <button onclick="doLogin()" id="btn-login" class="w-full p-4 bg-[#002D57] text-white rounded-2xl font-black uppercase shadow-lg">Masuk</button>
+            <div class="space-y-1">
+                <label class="text-[10px] font-black ml-2 uppercase text-slate-400">Nomor Induk Anggota</label>
+                <input type="text" id="nik" placeholder="NIK" class="w-full p-4 bg-gray-50 rounded-2xl border-2 border-transparent focus:border-blue-500 outline-none font-bold">
+            </div>
+            <div class="space-y-1">
+                <label class="text-[10px] font-black ml-2 uppercase text-slate-400">Kata Sandi</label>
+                <input type="password" id="pass" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-2xl border-2 border-transparent focus:border-blue-500 outline-none font-bold">
+            </div>
+            <button onclick="doLogin()" id="btn-login" class="btn-sbsi w-full mt-4 shadow-xl shadow-blue-900/20">Masuk</button>
         </div>
     </div>
 
     <div id="page-dashboard" class="page !p-0">
-        <div class="bg-[#002D57] p-8 pb-14 rounded-b-[40px] text-white shadow-xl">
-            <div class="flex justify-between items-center mb-6">
-                <div><p class="text-[10px] opacity-60 font-bold uppercase">Selamat Datang,</p><h2 id="user-nama" class="font-extrabold text-lg">...</h2></div>
-                <img id="user-foto" src="" class="w-12 h-12 rounded-full border-2 border-white/20 object-cover">
+        <div class="bg-[#002D57] p-8 pb-14 rounded-b-[45px] text-white shadow-xl">
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center gap-4">
+                    <img id="user-foto" src="" class="w-14 h-14 rounded-2xl border-2 border-white/20 object-cover shadow-lg">
+                    <div>
+                        <p class="text-[10px] opacity-60 font-black uppercase tracking-widest">Selamat Datang,</p>
+                        <h2 id="user-nama" class="font-extrabold text-lg">...</h2>
+                    </div>
+                </div>
             </div>
-            <button onclick="navigasi('page-dates')" class="w-full py-4 bg-[#00AEEF] text-white rounded-2xl font-black shadow-lg">MULAI HITUNG HAK</button>
+            <div class="bg-white/10 p-5 rounded-3xl border border-white/10">
+                <p class="text-[11px] font-bold mb-3 opacity-80 uppercase tracking-widest">Layanan Audit Hak</p>
+                <button onclick="navigasi('page-dates')" class="w-full py-4 bg-[#00AEEF] text-white rounded-2xl font-black shadow-lg text-xs uppercase">Hitung Selisih & Pesangon</button>
+            </div>
         </div>
     </div>
 
     <div id="page-dates" class="page p-6">
-        <h2 class="text-xl font-black text-[#002D57] mb-6">Masa Kerja</h2>
+        <h2 class="text-2xl font-black text-[#002D57] mb-6">Masa Kerja</h2>
         <div class="space-y-4">
-            <div class="bg-gray-50 p-5 rounded-3xl border"><p class="text-[10px] font-black uppercase mb-1">Tgl Masuk</p><input type="date" id="tgl-masuk" class="w-full font-bold bg-transparent outline-none"></div>
-            <div class="bg-gray-50 p-5 rounded-3xl border"><p class="text-[10px] font-black uppercase mb-1">Tgl PHK</p><input type="date" id="tgl-phk" class="w-full font-bold bg-transparent outline-none"></div>
+            <div class="bg-gray-50 p-5 rounded-3xl border">
+                <p class="text-[10px] font-black uppercase mb-1 text-slate-400">Tanggal Mulai Bekerja</p>
+                <input type="date" id="tgl-masuk" class="w-full font-bold bg-transparent outline-none">
+            </div>
+            <div class="bg-gray-50 p-5 rounded-3xl border">
+                <p class="text-[10px] font-black uppercase mb-1 text-red-500">Tanggal PHK / Berhenti</p>
+                <input type="date" id="tgl-phk" class="w-full font-bold bg-transparent outline-none">
+            </div>
         </div>
-        <button onclick="mulaiInput()" class="w-full mt-10 p-4 bg-[#002D57] text-white rounded-2xl font-black">LANJUTKAN</button>
+        <button onclick="mulaiInput()" class="btn-sbsi w-full mt-10">Lanjutkan Audit</button>
     </div>
 
     <div id="page-upah-tahun" class="page !p-0">
-        <div class="p-6 bg-[#002D57] text-white sticky top-0 z-50 flex justify-between items-center">
-            <h2 id="title-upah" class="font-black uppercase text-xs italic">TAHUN ...</h2>
-            <button onclick="duplikatUpah()" class="text-[10px] bg-white/20 px-3 py-1 rounded-full font-black uppercase">Salin</button>
+        <div class="p-6 bg-[#002D57] text-white sticky top-0 z-50 flex justify-between items-center shadow-lg">
+            <div>
+                <h2 id="title-upah" class="font-black uppercase text-sm italic">TAHUN 2024</h2>
+                <p class="text-[9px] opacity-60 font-bold uppercase">Audit Per Bulan</p>
+            </div>
+            <button onclick="duplikatUpah()" class="text-[10px] bg-white/20 px-4 py-2 rounded-xl font-black uppercase border border-white/20">Salin Upah</button>
         </div>
-        <div id="container-upah" class="p-4 space-y-2"></div>
-        <div class="p-4 flex gap-3 sticky bottom-0 bg-white border-t">
-            <button onclick="navUpah(-1)" class="flex-1 p-4 bg-gray-100 rounded-2xl font-black text-xs uppercase">Back</button>
-            <button onclick="navUpah(1)" class="flex-[2] p-4 bg-[#002D57] text-white rounded-2xl font-black text-xs uppercase">Simpan & Hitung</button>
+        <div id="container-upah" class="p-5 space-y-3"></div>
+        <div class="p-5 flex gap-3 sticky bottom-0 bg-white border-t border-slate-100">
+            <button onclick="navUpah(-1)" class="flex-1 p-4 bg-gray-100 rounded-2xl font-black text-xs uppercase">Kembali</button>
+            <button onclick="navUpah(1)" class="flex-[2] btn-sbsi text-xs uppercase shadow-lg">Simpan & Lanjut</button>
         </div>
     </div>
 
     <div id="page-result" class="page !p-0">
-        <div class="p-6 bg-[#002D57] text-white text-center font-black text-xs uppercase tracking-widest">Rekapitulasi Hak</div>
-        <div class="m-5 p-8 bg-[#002D57] rounded-[35px] text-white text-center shadow-2xl border border-white/10">
-            <p class="text-[10px] font-bold opacity-50 mb-2 uppercase">Total Estimasi Hak</p>
+        <div class="p-6 bg-[#002D57] text-white text-center font-black text-xs uppercase italic tracking-widest">Rekapitulasi Hak Anggota</div>
+        <div class="m-5 p-8 bg-[#002D57] rounded-[35px] text-white text-center shadow-2xl relative overflow-hidden">
+            <p class="text-[10px] font-bold opacity-50 mb-2 uppercase">Total Estimasi Diterima</p>
             <h1 id="res-total" class="text-3xl font-black">Rp 0</h1>
+            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-white/5 rounded-full"></div>
         </div>
         <div class="px-8 space-y-1">
-            <div class="flex justify-between py-4 border-b text-[11px]"><span class="text-slate-400 font-bold uppercase">Masa Kerja</span><b id="res-mk" class="text-slate-800">-</b></div>
-            <div class="flex justify-between py-4 border-b text-[11px]"><span class="text-red-500 font-bold uppercase">Kekurangan Selisih UMP</span><b id="res-selisih" class="text-red-600 font-black">Rp 0</b></div>
-            <div class="flex justify-between py-4 border-b text-[11px]"><span class="text-slate-400 font-bold uppercase">Pesangon</span><b id="res-pesangon" class="text-slate-800">Rp 0</b></div>
-            <div class="flex justify-between py-4 border-b text-[11px]"><span class="text-slate-400 font-bold uppercase">UPMK</span><b id="res-upmk" class="text-slate-800">Rp 0</b></div>
+            <div class="flex justify-between py-4 border-b text-[11px]"><span class="text-slate-400 font-bold uppercase italic">Masa Kerja</span><b id="res-mk" class="text-slate-800">-</b></div>
+            <div class="flex justify-between py-4 border-b text-[11px]"><span class="text-red-500 font-bold uppercase italic tracking-tight">Kekurangan Selisih UMP</span><b id="res-selisih" class="text-red-600 font-black">Rp 0</b></div>
+            <div class="flex justify-between py-4 border-b text-[11px]"><span class="text-slate-400 font-bold uppercase italic">Uang Pesangon</span><b id="res-pesangon" class="text-slate-800">Rp 0</b></div>
+            <div class="flex justify-between py-4 border-b text-[11px]"><span class="text-slate-400 font-bold uppercase italic">Uang Penghargaan (UPMK)</span><b id="res-upmk" class="text-slate-800">Rp 0</b></div>
         </div>
         <div class="p-8">
-            <button onclick="window.print()" class="w-full py-4 bg-[#00AEEF] text-white rounded-2xl font-black uppercase text-xs mb-3 shadow-md">SIMPAN PDF</button>
-            <button onclick="navigasi('page-dashboard')" class="w-full py-4 bg-gray-100 text-slate-400 rounded-2xl font-black uppercase text-xs">Selesai</button>
+            <button onclick="window.print()" class="w-full py-4 bg-[#00AEEF] text-white rounded-2xl font-black uppercase text-xs mb-3 shadow-md">Simpan ke PDF</button>
+            <button onclick="navigasi('page-dashboard')" class="w-full py-4 bg-gray-100 text-slate-400 rounded-2xl font-black uppercase text-xs">Tutup</button>
         </div>
     </div>
 
     <script>
-        // GANTI DENGAN URL GAS BARU BAPAK
-        const URL_GAS = "https://script.google.com/macros/s/AKfycbzmFS6lhTaES6alkhoxYDXy5rKdOTDCw12NBElxJdT_huj9vh09tlsagCuiH7oPi7ez/exec";
+        // URL GAS Bapak
+        const URL_GAS = "https://script.google.com/macros/s/AKfycby8xhlD_Vmwv7Z115_j_G7Oo0IdbhsgRNThfyn3jRJlA8K2lmrEM9kjEt_hRb6TNoxH/exec";
         let dataUpah = {}, years = [], curIdx = 0, dbUMP = {};
 
         function navigasi(id) {
@@ -91,22 +117,28 @@
             const btn = document.getElementById('btn-login');
             const nik = document.getElementById('nik').value;
             const pass = document.getElementById('pass').value;
-            btn.innerText = "KONEKSI...";
+            if(!nik || !pass) return alert("Isi NIK dan Password!");
+            
+            btn.innerText = "MENYAMBUNG...";
             try {
                 const res = await fetch(`${URL_GAS}?action=login_with_ump&nik=${nik}&pass=${pass}`).then(r => r.json());
                 if(res.status === "success") {
-                    dbUMP = res.umpData; // Menyedot Database_UMP
+                    dbUMP = res.umpData; // Database UMP tersimpan di sini
                     document.getElementById('user-nama').innerText = res.nama;
                     document.getElementById('user-foto').src = res.foto || 'https://via.placeholder.com/100';
                     navigasi('page-dashboard');
-                } else alert(res.message);
-            } catch(e) { alert("Koneksi bermasalah! Cek URL GAS."); }
+                } else {
+                    alert(res.message);
+                }
+            } catch(e) { 
+                alert("Koneksi bermasalah! Pastikan URL GAS sudah di-Deploy sebagai 'Anyone'."); 
+            }
             btn.innerText = "MASUK";
         }
 
         function mulaiInput() {
             const s = new Date(document.getElementById('tgl-masuk').value), e = new Date(document.getElementById('tgl-phk').value);
-            if(isNaN(s) || isNaN(e)) return alert("Isi tanggal!");
+            if(isNaN(s) || isNaN(e)) return alert("Isi tanggal masuk dan PHK!");
             years = []; for(let y=s.getFullYear(); y<=e.getFullYear(); y++) years.push(y);
             curIdx = 0; renderUpahYear(); navigasi('page-upah-tahun');
         }
@@ -115,7 +147,7 @@
             const y = years[curIdx], s = new Date(document.getElementById('tgl-masuk').value), e = new Date(document.getElementById('tgl-phk').value);
             document.getElementById('title-upah').innerText = `AUDIT TAHUN ${y}`;
             let html = "";
-            const umpTahunIni = dbUMP[y] || 0; // Mengambil UMP dari database Bapak
+            const umpTahunIni = dbUMP[y] || 0; // Mengambil UMP dari database Bapak berdasarkan tahun
 
             for(let m=0; m<12; m++) {
                 let f = new Date(y, m, 1), l = new Date(y, m + 1, 0);
@@ -125,13 +157,16 @@
                     const selisih = Math.max(0, umpTahunIni - bulanan);
                     html += `
                     <div class="card-audit shadow-sm">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[10px] font-black text-slate-400 uppercase">${f.toLocaleString('id-ID',{month:'long'})}</span>
-                            <input type="number" value="${val||''}" oninput="updateRealtime('${k}', this.value, ${umpTahunIni})" class="inp-harian" placeholder="0">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">${f.toLocaleString('id-ID',{month:'long'})}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] font-bold text-slate-300">Rp</span>
+                                <input type="number" value="${val||''}" oninput="updateRealtime('${k}', this.value, ${umpTahunIni})" class="inp-harian" placeholder="0">
+                            </div>
                         </div>
-                        <div class="flex justify-between text-[10px] font-bold">
+                        <div class="flex justify-between items-center text-[10px] font-bold">
                             <span class="text-blue-500 uppercase italic">Bulanan (x25): <span id="est-${k}">Rp ${new Intl.NumberFormat('id-ID').format(bulanan)}</span></span>
-                            <span class="text-red-500 uppercase italic">Selisih UMP: <span id="sel-${k}">Rp ${new Intl.NumberFormat('id-ID').format(selisih)}</span></span>
+                            <span class="text-red-500 uppercase italic tracking-tighter">Selisih UMP: <span id="sel-${k}">Rp ${new Intl.NumberFormat('id-ID').format(selisih)}</span></span>
                         </div>
                     </div>`;
                 }
@@ -158,6 +193,7 @@
             let totalBulan = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth());
             let thn = Math.floor(totalBulan / 12);
             
+            // 1. Akumulasi Selisih UMP Seluruh Bulan
             let totalSelisih = 0;
             Object.keys(dataUpah).forEach(k => {
                 const [y] = k.split('-');
@@ -166,24 +202,29 @@
                 if(bulanan < ump) totalSelisih += (ump - bulanan);
             });
 
+            // 2. Kalkulasi Pesangon & UPMK (Sesuai PP 35/2021)
             const keys = Object.keys(dataUpah).sort();
             let upahTerakhir = (dataUpah[keys[keys.length-1]] || 0) * 25;
             let koefPsg = (thn >= 8) ? 9 : thn + 1;
             let pesangon = koefPsg * upahTerakhir;
-            let koefUpmk = (thn < 3) ? 0 : (thn < 6 ? 2 : (thn < 9 ? 3 : 4)) * upahTerakhir;
+            let upmk = (thn < 3) ? 0 : (thn < 6 ? 2 : (thn < 9 ? 3 : 4)) * upahTerakhir;
 
-            document.getElementById('res-mk').innerText = `${thn} Thn ${totalBulan % 12} Bln`;
+            // Render ke UI
+            document.getElementById('res-mk').innerText = `${thn} Tahun ${totalBulan % 12} Bulan`;
             document.getElementById('res-pesangon').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(pesangon);
             document.getElementById('res-upmk').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(upmk);
             document.getElementById('res-selisih').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(totalSelisih);
             document.getElementById('res-total').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(pesangon + upmk + totalSelisih);
+            
             navigasi('page-result');
         }
 
         function duplikatUpah() {
             const inp = document.querySelectorAll('.inp-harian');
-            let v = inp[0].value;
-            inp.forEach(i => { i.value = v; i.dispatchEvent(new Event('input')); });
+            if(inp.length > 0) {
+                let v = inp[0].value;
+                inp.forEach(i => { i.value = v; i.dispatchEvent(new Event('input')); });
+            }
         }
     </script>
 </body>
